@@ -8,6 +8,7 @@ import { Router } from 'express';
 import { computePlan } from '../../shared/engine/index.js';
 import { runStressTest } from '../../shared/engine/stress.js';
 import { forecastRsvp } from '../../shared/engine/rsvp.js';
+import { sanitizeSpreadsheetFormula } from '../../shared/engine/exportModel.js';
 import { validatePlanInputs } from '../util/validate.js';
 import { sendError } from '../util/errors.js';
 import { logger } from '../util/logger.js';
@@ -54,7 +55,7 @@ router.post('/excel', async (req, res) => {
     budgetSheet.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF6B21A8' } };
 
     for (const cat of plan.budget.categories) {
-      budgetSheet.addRow({ name: cat.name, amount: cat.amount, pct: cat.pct });
+      budgetSheet.addRow({ name: sanitizeSpreadsheetFormula(cat.name), amount: cat.amount, pct: cat.pct });
     }
     budgetSheet.addRow({ name: 'Contingency Buffer', amount: plan.budget.contingency, pct: plan.budget.contingencyPct });
     budgetSheet.addRow({});
@@ -67,16 +68,16 @@ router.post('/excel', async (req, res) => {
     const summarySheet = wb.addWorksheet('Event Summary');
     const summaryData = [
       ['Field', 'Value'],
-      ['Event Name', inputs.name],
-      ['Type', inputs.type],
-      ['Date', inputs.date],
+      ['Event Name', sanitizeSpreadsheetFormula(inputs.name)],
+      ['Type', sanitizeSpreadsheetFormula(inputs.type)],
+      ['Date', sanitizeSpreadsheetFormula(inputs.date)],
       ['Guests Invited', inputs.guests],
       ['Expected Attendance', rsvp.expectedAttendance],
-      ['Vibe', inputs.vibe],
+      ['Vibe', sanitizeSpreadsheetFormula(inputs.vibe)],
       ['Total Budget', fmtINR(plan.budget.totalBudget)],
       ['Per-Head Budget', fmtINR(plan.perGuest)],
       ['Catering Per-Head', fmtINR(plan.feasibility.perHeadActual)],
-      ['Feasibility Tier', plan.feasibility.tier],
+      ['Feasibility Tier', sanitizeSpreadsheetFormula(plan.feasibility.tier)],
       ['Days to Event', plan.daysToGo],
       ['Vegetarian Only', inputs.vegOnly ? 'Yes' : 'No'],
     ];
@@ -123,7 +124,7 @@ router.post('/excel', async (req, res) => {
     timelineSheet.getRow(1).font = { bold: true, color: { argb: 'FFFFFFFF' } };
     timelineSheet.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF6B21A8' } };
     for (const m of plan.timeline.milestones) {
-      timelineSheet.addRow({ task: m.task, date: m.dueDate, status: m.isPast ? 'Past' : 'Upcoming' });
+      timelineSheet.addRow({ task: sanitizeSpreadsheetFormula(m.task), date: sanitizeSpreadsheetFormula(m.dueDate), status: m.isPast ? 'Past' : 'Upcoming' });
     }
 
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

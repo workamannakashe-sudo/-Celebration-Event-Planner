@@ -76,10 +76,10 @@
   letter-spacing: -0.05em;
   text-transform: uppercase;
   color: #ffffff;
-  background: linear-gradient(135deg, #ffffff 20%, rgba(232, 213, 181, 0.8) 70%, rgba(255, 255, 255, 0.4) 100%);
+  background: linear-gradient(135deg, #fdf6ee 0%, #f5c842 45%, #e8192f 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 40px rgba(232, 213, 181, 0.2);
+  text-shadow: 0 0 60px rgba(192, 21, 42, 0.4);
 }
 
 /* Focus Pull Effect (Sharpens on scroll) */
@@ -131,15 +131,15 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--accent);
-  background: rgba(232, 213, 181, 0.06);
-  border: 1px solid rgba(232, 213, 181, 0.18);
+  background: rgba(245, 200, 66, 0.07);
+  border: 1px solid rgba(245, 200, 66, 0.22);
   border-radius: 4px;
   padding: 5px 12px;
   transition: background var(--dur-fast), border-color var(--dur-fast);
 }
 
 .tag-chip:hover {
-  background: rgba(232, 213, 181, 0.14);
+  background: rgba(245, 200, 66, 0.16);
   border-color: var(--accent);
 }
 
@@ -363,13 +363,13 @@
   letter-spacing: -0.02em;
   text-transform: uppercase;
   color: transparent;
-  -webkit-text-stroke: 1px rgba(232, 213, 181, 0.35);
+  -webkit-text-stroke: 1px rgba(245, 200, 66, 0.38);
   transition: color var(--dur-fast), -webkit-text-stroke-color var(--dur-fast);
 }
 
 .marquee-item:hover {
-  color: var(--accent);
-  -webkit-text-stroke-color: var(--accent);
+  color: var(--crimson-bright);
+  -webkit-text-stroke-color: var(--crimson-bright);
 }
 
 @keyframes marquee-scroll {
@@ -399,7 +399,7 @@
   letter-spacing: -0.06em;
   text-transform: uppercase;
   color: #ffffff;
-  background: linear-gradient(180deg, rgba(232, 213, 181, 0.9) 0%, rgba(255, 255, 255, 0.2) 100%);
+  background: linear-gradient(180deg, #fdf6ee 0%, #f5c842 40%, rgba(192, 21, 42, 0.5) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

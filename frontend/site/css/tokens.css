@@ -1,26 +1,31 @@
 /* ════════════════════════════════════════════════════════════════════════════
-   Utsav – Design Tokens & Base Theme ("Ink and Champagne")
+   Utsav – Design Tokens & Base Theme ("Crimson & Ivory" — Indian Festive)
+   Brief: Red and white, Indian celebration palette
    ════════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* Dynamic Palette Variables (written by palette.js on scroll or fallback) */
-  --bg: #09090b;
-  --fg: #f4f4f6;
-  --fg-muted: #94949e;
-  --fg-dim: #5c5c66;
-  --accent: #e8d5b5; /* Champagne */
-  --accent-rgb: 232, 213, 181;
-  --accent-glow: rgba(232, 213, 181, 0.15);
-  --border-hairline: rgba(232, 213, 181, 0.12);
-  --border-subtle: rgba(255, 255, 255, 0.08);
+  /* ── Core Palette: Deep Crimson, Ivory, Marigold Gold ── */
+  --bg: #0d0305;              /* near-black with warm red undertone */
+  --fg: #fdf6ee;              /* ivory white */
+  --fg-muted: #c9a8a8;        /* muted rose */
+  --fg-dim: #7a5252;          /* dim rose */
+  --accent: #f5c842;          /* marigold gold */
+  --accent-rgb: 245, 200, 66;
+  --accent-glow: rgba(245, 200, 66, 0.18);
+  --crimson: #c0152a;         /* deep Indian crimson */
+  --crimson-bright: #e8192f;  /* vibrant red */
+  --crimson-glow: rgba(192, 21, 42, 0.35);
+  --ivory: #fdf6ee;           /* pure ivory */
+  --border-hairline: rgba(245, 200, 66, 0.18);
+  --border-subtle: rgba(253, 246, 238, 0.08);
 
-  /* Liquid Glass Surface Tokens */
-  --glass-bg: rgba(18, 18, 22, 0.72);
-  --glass-bg-hover: rgba(28, 28, 34, 0.85);
-  --glass-border: rgba(232, 213, 181, 0.16);
-  --glass-specular: rgba(255, 255, 255, 0.14);
+  /* Liquid Glass Surface Tokens (warm-tinted dark glass) */
+  --glass-bg: rgba(20, 5, 7, 0.74);
+  --glass-bg-hover: rgba(32, 8, 10, 0.88);
+  --glass-border: rgba(245, 200, 66, 0.2);
+  --glass-specular: rgba(253, 246, 238, 0.12);
   --glass-blur: blur(16px);
-  --surface-card: rgba(16, 16, 20, 0.6);
+  --surface-card: rgba(18, 4, 6, 0.62);
 
   /* Typography Stacks */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;

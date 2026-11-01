@@ -21,6 +21,7 @@
   ],
   "exclude": [
     "node_modules",
-    "coverage"
+    "coverage",
+    "tests/a11y/axe.test.js"
   ]
 }
