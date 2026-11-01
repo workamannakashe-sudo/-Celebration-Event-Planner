@@ -37,7 +37,7 @@ export async function getPlan(inputs) {
     });
     if (res.ok) {
       const data = await res.json();
-      return { plan: data.plan, source: 'server' };
+      return { plan: data.plan || data, source: 'server' };
     }
   } catch {
     // Fall back to client-side engine execution
@@ -65,7 +65,7 @@ export async function getIdeas(inputs, lang, plan) {
     });
     if (res.ok) {
       const data = await res.json();
-      return { ideas: data.ideas, source: data.source || 'ai' };
+      return { ideas: data.ideas || data, source: data.source || 'ai' };
     }
   } catch {
     // Offline or network error
