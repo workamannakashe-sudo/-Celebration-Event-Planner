@@ -10,6 +10,7 @@ import {
   CONTINGENCY_FRACTION,
   VEG_ONLY_CATERING_REDUCTION,
 } from './config.js';
+import { getTemplate, TEMPLATES } from './templates/index.js';
 
 /** @typedef {import('./config.js').EventType} EventType */
 /** @typedef {import('./config.js').Vibe} Vibe */
@@ -48,17 +49,24 @@ export function vibeMultiplier(categoryName, vibe) {
  * Allocate the budget across categories.
  * Invariant: sum of all allocations (including contingency) === totalBudget.
  *
- * @param {EventType} type
+ * @param {EventType|string} type
  * @param {number} totalBudget - Total budget in INR
- * @param {Vibe} vibe
- * @param {boolean} vegOnly
+ * @param {Vibe} [vibe]
+ * @param {boolean} [vegOnly=false]
+ * @param {number} [customContingency] - Optional custom contingency fraction (e.g. 0.12)
  * @returns {BudgetPlan}
  */
-export function allocateBudget(type, totalBudget, vibe, vegOnly) {
-  const baseWeights = BASE_WEIGHTS[type];
+export function allocateBudget(type, totalBudget, vibe, vegOnly = false, customContingency = undefined) {
+  const norm = String(type || '').toLowerCase().replace(/[^a-z_]/g, '');
+  if (!Object.prototype.hasOwnProperty.call(TEMPLATES, norm)) {
+    throw new Error(`Unknown event type: ${type}`);
+  }
+  const tpl = getTemplate(type);
+  const baseWeights = BASE_WEIGHTS[type] || (tpl && tpl.baseWeights);
   if (!baseWeights) throw new Error(`Unknown event type: ${type}`);
 
-  const spendable = Math.round(totalBudget * (1 - CONTINGENCY_FRACTION));
+  const contingencyFrac = typeof customContingency === 'number' ? customContingency : CONTINGENCY_FRACTION;
+  const spendable = Math.round(totalBudget * (1 - contingencyFrac));
 
   // Apply vibe multipliers to raw weights
   const adjustedWeights = {};

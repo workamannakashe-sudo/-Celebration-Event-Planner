@@ -1,0 +1,77 @@
+/**
+ * @file shared/engine/templates/wedding.js
+ * @description Full template configuration for Wedding celebrations.
+ */
+
+export const weddingTemplate = {
+  type: 'wedding',
+  label: 'Wedding',
+  defaultName: 'Meera & Rohan Wedding',
+  comfortPricePerHead: 900,
+  idealLeadWeeks: 26,
+  defaultShowUpRate: 0.85,
+  showUpBand: { min: 0.78, max: 0.92 },
+  defaultBuffer: 0.07,
+  baseWeights: {
+    'Venue': 22,
+    'Catering': 32,
+    'Decor & Flowers': 12,
+    'Photo & Video': 10,
+    'Attire & Beauty': 9,
+    'Music & Entertainment': 6,
+    'Invites & Stationery': 3,
+    'Logistics & Stay': 6,
+  },
+  taskGraph: [
+    { id: 'w_date_budget', task: 'Lock budget, guest list and date', weeksBefore: 26, durationWeeks: 2, dependsOn: [], owner: 'Organizer' },
+    { id: 'w_venue', task: 'Book wedding venue and halls', weeksBefore: 24, durationWeeks: 4, dependsOn: ['w_date_budget'], owner: 'Family' },
+    { id: 'w_caterer', task: 'Book caterer and lock menu tastings', weeksBefore: 22, durationWeeks: 3, dependsOn: ['w_venue'], owner: 'Catering Lead' },
+    { id: 'w_photo', task: 'Book photographer and cinematographer', weeksBefore: 20, durationWeeks: 2, dependsOn: ['w_date_budget'], owner: 'Organizer' },
+    { id: 'w_decor', task: 'Finalise decorator and floral design', weeksBefore: 16, durationWeeks: 3, dependsOn: ['w_venue'], owner: 'Decor Committee' },
+    { id: 'w_invites', task: 'Send formal wedding invitations and digital cards', weeksBefore: 12, durationWeeks: 2, dependsOn: ['w_venue'], owner: 'Family' },
+    { id: 'w_attire', task: 'Complete attire selection and fittings', weeksBefore: 8, durationWeeks: 4, dependsOn: ['w_date_budget'], owner: 'Organizer' },
+    { id: 'w_music', task: 'Finalise DJ, sangeet tracklist and dhol', weeksBefore: 6, durationWeeks: 2, dependsOn: ['w_venue'], owner: 'Music Lead' },
+    { id: 'w_rsvp', task: 'Lock final headcount with caterer', weeksBefore: 3, durationWeeks: 1, dependsOn: ['w_invites', 'w_caterer'], owner: 'Organizer' },
+    { id: 'w_logistics', task: 'Confirm transport, guest stay and welcome kits', weeksBefore: 2, durationWeeks: 1, dependsOn: ['w_rsvp'], owner: 'Logistics' },
+    { id: 'w_runsheet', task: 'Distribute minute-by-minute run sheet to family', weeksBefore: 1, durationWeeks: 1, dependsOn: ['w_venue', 'w_caterer'], owner: 'Organizer' },
+    { id: 'w_event', task: 'Wedding Day Celebrations 🎉', weeksBefore: 0, durationWeeks: 1, dependsOn: ['w_runsheet'], owner: 'All' },
+  ],
+  vendorCategories: [
+    { slug: 'venue', name: 'Venue & Mandap', askQuestion: 'Can you hold the date for 48 hours? Is generator backup included in the rental?' },
+    { slug: 'catering', name: 'Catering & Live Counters', askQuestion: 'Do you offer a complimentary tasting? What is the server-to-guest ratio?' },
+    { slug: 'decor', name: 'Decor & Flowers', askQuestion: 'Is stage lighting included? Who handles post-event teardown?' },
+    { slug: 'photo', name: 'Photo & Video', askQuestion: 'What are the deliverables and edit turnaround time? Do you bring a backup shooter?' },
+    { slug: 'music', name: 'Music & DJ', askQuestion: 'What sound permits/licenses are covered? Can we share a custom sangeet playlist?' },
+    { slug: 'attire', name: 'Attire & Makeup', askQuestion: 'How many makeup trials and bridal party attendants are covered?' },
+  ],
+  addOns: [
+    { id: 'add_live_counters', name: 'Chaat & Live Counters', costModel: 'per_guest', unitCost: 120, description: 'Live chaat, jalebi and kulfi counters' },
+    { id: 'add_photo_booth', name: 'Interactive Photo Booth', costModel: 'per_event', unitCost: 18000, description: 'Instant print station with props' },
+    { id: 'add_dhol_tasha', name: 'Live Dhol & Tasha Troupes', costModel: 'per_event', unitCost: 15000, description: 'High-energy baraat welcome entry' },
+    { id: 'add_return_gifts', name: 'Handcrafted Mithai Return Gifts', costModel: 'per_guest', unitCost: 150, description: 'Festive gift boxes for departing guests' },
+    { id: 'add_drone_shoot', name: 'Drone Aerial Cinematography', costModel: 'per_event', unitCost: 14000, description: '4K aerial video coverage of baraat and venue' },
+  ],
+  savingsLevers: [
+    { id: 'sav_weekday', name: 'Host on a weekday or Friday', minSaving: 35000, maxSaving: 80000, tradeOff: 'Guests may need early work leaves', regretWeight: 2 },
+    { id: 'sav_buffet', name: 'Buffet service instead of plated thali', minSaving: 20000, maxSaving: 45000, tradeOff: 'Self-service format', regretWeight: 1 },
+    { id: 'sav_seasonal_flowers', name: 'Use local seasonal marigolds & tuberoses', minSaving: 15000, maxSaving: 35000, tradeOff: 'Less exotic imported orchid varieties', regretWeight: 1 },
+    { id: 'sav_digital_invites', name: 'Digital animated invites + paper for elders', minSaving: 12000, maxSaving: 25000, tradeOff: 'Fewer physical paper cards mailed', regretWeight: 1 },
+    { id: 'sav_bundle_venue', name: 'Bundle venue with in-house catering/decor', minSaving: 25000, maxSaving: 60000, tradeOff: 'Fewer customization choices for external vendors', regretWeight: 3 },
+    { id: 'sav_day_lunch', name: 'Host day-time lunch reception', minSaving: 25000, maxSaving: 50000, tradeOff: 'Day-time event instead of evening lighting', regretWeight: 2 },
+    { id: 'sav_trim_guests', name: 'Trim Tier-C extended acquaintance list by 10%', minSaving: 30000, maxSaving: 70000, tradeOff: 'Smaller celebration gathering', regretWeight: 4 },
+  ],
+  runSheetBlocks: [
+    { time: '08:00 AM', title: 'Vendor Access & Mandap Floral Setup', owner: 'Decorator' },
+    { time: '10:00 AM', title: 'Bride & Groom Makeup & Getting Ready', owner: 'Makeup Artist' },
+    { time: '11:30 AM', title: 'Baraat Arrival & Welcome Milni', owner: 'Family Coordinator' },
+    { time: '12:30 PM', title: 'Varmala & Muhurat Rituals', owner: 'Priest / Family' },
+    { time: '01:30 PM', title: 'Lunch Feast & Live Counters Open', owner: 'Caterer' },
+    { time: '03:30 PM', title: 'Photos, Blessings & Vidaai', owner: 'Photographer / Family' },
+  ],
+  redFlags: [
+    'Advance payment exceeding 50% without locked contract',
+    'No generator or backup power guarantee for AC and sound',
+    'Hidden corkage, kitchen usage or generator fuel surcharges',
+    'Lack of explicit cancellation and postponement clauses',
+  ],
+};

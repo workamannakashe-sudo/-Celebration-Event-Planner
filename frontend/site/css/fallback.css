@@ -1,0 +1,68 @@
+/* ════════════════════════════════════════════════════════════════════════════
+   Utsav – Static Fallback ("2.5D") CSS
+   Active when WebGL is disabled, device is low tier, or reduced motion is active.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+.fallback-visual-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 580px;
+  margin-top: 16px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-hairline);
+  box-shadow: inset 0 1px 0 var(--glass-specular);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+/* SVG Chart Visual Elements */
+.fallback-svg {
+  width: 100%;
+  height: auto;
+  max-height: 280px;
+  display: block;
+}
+
+/* When 3D is active, hide inline fallback visuals to avoid duplicate charts */
+body.webgl-active .fallback-visual-container {
+  display: none;
+}
+
+/* When fallback mode is forced (no WebGL, low tier, or reduced motion), show them */
+body.fallback-active .fallback-visual-container {
+  display: flex;
+}
+
+/* Fallback background gradients per section */
+body.fallback-active {
+  background: radial-gradient(circle at 50% 20%, #151520 0%, #09090b 100%);
+  transition: background 600ms ease;
+}
+
+body.fallback-active[data-active-section="002"] {
+  background: radial-gradient(circle at 60% 30%, #1c1328 0%, #09090b 100%);
+}
+
+body.fallback-active[data-active-section="003"] {
+  background: radial-gradient(circle at 40% 40%, #0f2022 0%, #09090b 100%);
+}
+
+body.fallback-active[data-active-section="004"] {
+  background: radial-gradient(circle at 50% 50%, #261c10 0%, #09090b 100%);
+}
+
+body.fallback-active[data-active-section="005"] {
+  background: radial-gradient(circle at 55% 45%, #181926 0%, #09090b 100%);
+}
+
+body.fallback-active[data-active-section="006"] {
+  background: radial-gradient(circle at 45% 55%, #142218 0%, #09090b 100%);
+}
+
+body.fallback-active[data-active-section="007"] {
+  background: radial-gradient(circle at 50% 60%, #231b14 0%, #09090b 100%);
+}

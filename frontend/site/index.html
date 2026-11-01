@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Utsav – Plan Inside a Living 3D World</title>
+  <meta name="description" content="Thoughtful, deterministic event planning and budgeting for celebrations in India. Real engine math, Monte Carlo stress testing, and living 3D data visualisations.">
+  <link rel="canonical" href="http://localhost:3000/">
+
+  <!-- Open Graph & Twitter -->
+  <meta property="og:title" content="Utsav – Plan Inside a Living 3D World">
+  <meta property="og:description" content="Thoughtful event planning and budgeting assistant for Indian celebrations.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="http://localhost:3000/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Utsav – Living 3D Event Planning">
+  <meta name="twitter:description" content="Money first. Then everything else. Real engine math for every rupee.">
+
+  <!-- Self-Hosted & Preconnected Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/hud.css">
+  <link rel="stylesheet" href="css/sections.css">
+  <link rel="stylesheet" href="css/fallback.css">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Utsav",
+    "applicationCategory": "EventPlanningApplication",
+    "operatingSystem": "All",
+    "description": "GenAI-powered, mathematically deterministic event-planning assistant for Indian celebrations."
+  }
+  </script>
+</head>
+<body class="fallback-active">
+
+  <!-- Skip links for accessibility (WCAG 2.4.1) -->
+  <div class="skip-links">
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <a href="/app" class="skip-link">Skip to the app</a>
+  </div>
+
+  <!-- Subtle Film Grain Overlay -->
+  <div class="grain-overlay" aria-hidden="true"></div>
+
+  <!-- Persistent Fixed WebGL Canvas Behind Content -->
+  <canvas id="webgl-canvas" aria-hidden="true"></canvas>
+
+  <!-- ════════════════════════════════════════════════════════════════════════════
+       VIEWFINDER HUD FRAME & COCKPIT
+       ════════════════════════════════════════════════════════════════════════════ -->
+  <header class="hud-frame" role="banner">
+    <!-- Viewfinder Corner Marks -->
+    <div class="hud-corner hud-corner-tl" aria-hidden="true"></div>
+    <div class="hud-corner hud-corner-tr" aria-hidden="true"></div>
+    <div class="hud-corner hud-corner-bl" aria-hidden="true"></div>
+    <div class="hud-corner hud-corner-br" aria-hidden="true"></div>
+
+    <!-- HUD Topbar -->
+    <div class="hud-topbar">
+      <a href="#sec-intro" class="hud-brand-pill" aria-label="Utsav Home">
+        <span class="hud-live-tag">
+          <span class="hud-live-dot" aria-hidden="true"></span>
+          <span>LIVE</span>
+        </span>
+        <span class="hud-brand-title">UTSAV // 3D WORLD</span>
+      </a>
+
+      <div class="hud-top-actions">
+        <!-- Live Section Indicator -->
+        <div id="hud-section-label" class="hud-section-indicator" aria-hidden="true">
+          000 / INTRO
+        </div>
+
+        <!-- Pause Motion Toggle (WCAG 2.2.2) -->
+        <button id="btn-pause-motion" class="hud-btn" type="button" aria-pressed="false" aria-label="Pause motion and 3D camera animations">
+          <span id="btn-pause-text">Pause Motion</span>
+        </button>
+
+        <!-- Link to Planner App -->
+        <a href="/app" class="hud-btn hud-btn-primary">
+          Open App →
+        </a>
+      </div>
+    </div>
+
+    <!-- HUD Bottom Cockpit -->
+    <div class="hud-cockpit">
+      <!-- Live Telemetry Data Counters (Computed from shared/engine) -->
+      <div class="hud-telemetry-panel" aria-hidden="true">
+        <div class="hud-stat-cell">
+          <span class="hud-stat-label">Budget</span>
+          <span id="hud-val-budget" class="hud-stat-value tabular">₹12,00,000</span>
+        </div>
+        <div class="hud-stat-cell">
+          <span class="hud-stat-label">Headcount</span>
+          <span id="hud-val-guests" class="hud-stat-value tabular">300 Guests</span>
+        </div>
+        <div class="hud-stat-cell">
+          <span class="hud-stat-label">Days to Go</span>
+          <span id="hud-val-days" class="hud-stat-value tabular">184</span>
+        </div>
+        <div class="hud-stat-cell">
+          <span class="hud-stat-label">On-Budget Chance</span>
+          <span id="hud-val-safe" class="hud-stat-value tabular">72%</span>
+        </div>
+      </div>
+
+      <!-- Navigation Dots -->
+      <nav class="hud-nav-dots" aria-label="Quick section navigation">
+        <button class="hud-nav-dot active" data-target="sec-intro" aria-label="Jump to Intro"></button>
+        <button class="hud-nav-dot" data-target="sec-about" aria-label="Jump to About"></button>
+        <button class="hud-nav-dot" data-target="sec-budget" aria-label="Jump to Budget"></button>
+        <button class="hud-nav-dot" data-target="sec-stress" aria-label="Jump to Stress Test"></button>
+        <button class="hud-nav-dot" data-target="sec-timeline" aria-label="Jump to Timeline"></button>
+        <button class="hud-nav-dot" data-target="sec-vendors" aria-label="Jump to Vendors"></button>
+        <button class="hud-nav-dot" data-target="sec-guests" aria-label="Jump to Guests"></button>
+        <button class="hud-nav-dot" data-target="sec-plans" aria-label="Jump to Demo Plans"></button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ════════════════════════════════════════════════════════════════════════════
+       MAIN NATIVE-SCROLLING DOM SECTIONS
+       ════════════════════════════════════════════════════════════════════════════ -->
+  <main id="main-content" class="main-content">
+
+    <!-- ── 000 / INTRO ──────────────────────────────────────────────────────── -->
+    <section id="sec-intro" class="landing-section" data-section="000" aria-label="Introduction">
+      <div class="section-content">
+        <div class="section-label">000 / LIVING 3D PLANNING</div>
+        <div class="hero-wordmark-container">
+          <h1 class="hero-wordmark">UTSAV</h1>
+        </div>
+        <div class="declarative-copy">
+          <p>Plan inside a living 3D world.</p>
+          <p>Thoughtful event planning and budgeting for Indian weddings, birthdays, and festivals.</p>
+          <p>Driven by pure deterministic mathematics, not hallucinated estimates.</p>
+          <p class="bold-punchline">Every rupee accounted for before contracts are signed.</p>
+        </div>
+        <div class="tag-chips-row">
+          <span class="tag-chip">PURE ESM ENGINE</span>
+          <span class="tag-chip">MONTE CARLO</span>
+          <span class="tag-chip">WCAG 2.2 AA</span>
+          <span class="tag-chip">OFFLINE READY</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 001 / ABOUT ──────────────────────────────────────────────────────── -->
+    <section id="sec-about" class="landing-section" data-section="001" aria-label="About Utsav">
+      <div class="section-content">
+        <div class="section-label">001 / ABOUT</div>
+        <h2 class="headline-knockout focus-pull">MONEY FIRST.<br>THEN EVERYTHING ELSE.</h2>
+        <div class="declarative-copy">
+          <p>Every celebration starts with hope and ends with a bill.</p>
+          <p>We turn fuzzy estimates into strict, defensible allocations.</p>
+          <p>No spreadsheets to break. No guesswork.</p>
+          <p class="bold-punchline">Money first. Then everything else.</p>
+        </div>
+        <div class="tag-chips-row">
+          <span class="tag-chip">TRANSPARENT</span>
+          <span class="tag-chip">DETERMINISTIC</span>
+          <span class="tag-chip">NO SURPRISES</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 002 / BUDGET ─────────────────────────────────────────────────────── -->
+    <section id="sec-budget" class="landing-section" data-section="002" aria-label="Budget Allocation">
+      <div class="section-content">
+        <div class="section-label">002 / BUDGET</div>
+        <h2 class="headline-knockout focus-pull">ALLOCATE.<br>PROTECT.</h2>
+        <div class="declarative-copy">
+          <p>Every rupee has a job. We show where it goes, and where it could slip.</p>
+          <p>An automatic 8% contingency buffer guards against unexpected vendor hikes.</p>
+          <p>Catering feasibility calculated down to the per-plate minimum.</p>
+          <p class="bold-punchline">So nothing surprises you.</p>
+        </div>
+        <div class="tag-chips-row">
+          <span class="tag-chip">SPLIT</span>
+          <span class="tag-chip">STRESS TEST</span>
+          <span class="tag-chip">TRADE-OFFS</span>
+        </div>
+
+        <!-- Interactive Sliders (Live updates 3D Ring & HUD via Real Engine) -->
+        <div class="section-interactive-card" role="region" aria-label="Interactive budget calculator">
+          <div class="slider-group">
+            <div class="slider-header-row">
+              <label for="slider-budget" class="slider-title">Total Budget (INR)</label>
+              <span id="display-slider-budget" class="slider-live-value tabular">₹12,00,000</span>
+            </div>
+            <input type="range" id="slider-budget" class="site-range-input" min="100000" max="3000000" step="50000" value="1200000" aria-label="Adjust budget in Indian rupees">
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header-row">
+              <label for="slider-guests" class="slider-title">Expected Guests</label>
+              <span id="display-slider-guests" class="slider-live-value tabular">300 Guests</span>
+            </div>
+            <input type="range" id="slider-guests" class="site-range-input" min="50" max="800" step="25" value="300" aria-label="Adjust expected guest headcount">
+          </div>
+        </div>
+
+        <!-- Fallback 2.5D Inline SVG Donut Chart -->
+        <div class="fallback-visual-container fallback-chart fallback-donut" aria-label="Budget breakdown donut chart">
+          <svg class="fallback-svg" viewBox="0 0 200 200" role="img" aria-label="Budget donut allocation chart">
+            <circle cx="100" cy="100" r="70" fill="transparent" stroke="#2a1f3d" stroke-width="26"/>
+            <circle cx="100" cy="100" r="70" fill="transparent" stroke="#8b5cf6" stroke-width="26" stroke-dasharray="140 300" stroke-dashoffset="0"/>
+            <circle cx="100" cy="100" r="70" fill="transparent" stroke="#ec4899" stroke-width="26" stroke-dasharray="110 330" stroke-dashoffset="-140"/>
+            <circle cx="100" cy="100" r="70" fill="transparent" stroke="#06b6d4" stroke-width="26" stroke-dasharray="60 380" stroke-dashoffset="-250"/>
+            <circle cx="100" cy="100" r="70" fill="transparent" stroke="#e8d5b5" stroke-width="26" stroke-dasharray="35 405" stroke-dashoffset="-310"/>
+            <text x="100" y="96" text-anchor="middle" fill="#fff" font-family="sans-serif" font-size="12" font-weight="700">₹12,00,000</text>
+            <text x="100" y="112" text-anchor="middle" fill="#94949e" font-family="sans-serif" font-size="9">Total Budget</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 003 / STRESS TEST ────────────────────────────────────────────────── -->
+    <section id="sec-stress" class="landing-section" data-section="003" aria-label="Monte Carlo Stress Test">
+      <div class="section-content">
+        <div class="section-label">003 / STRESS TEST</div>
+        <h2 class="headline-knockout focus-pull">MONTE CARLO.<br>REALITY CHECK.</h2>
+        <div class="declarative-copy">
+          <p>Five thousand simulations model vendor price shocks and guest spikes.</p>
+          <p>Know your true probability of staying on budget before paying a single advance.</p>
+          <p>Visualise the tail risk before contracts are signed.</p>
+          <p class="bold-punchline">72% chance you stay on budget.</p>
+        </div>
+        <div class="tag-chips-row">
+          <span class="tag-chip">MONTE CARLO</span>
+          <span class="tag-chip">RISK BINS</span>
+          <span class="tag-chip">P95 COST</span>
+        </div>
+
+        <!-- Fallback 2.5D Inline SVG Histogram -->
+        <div class="fallback-visual-container fallback-chart fallback-histogram" aria-label="Monte Carlo distribution histogram">
+          <svg class="fallback-svg" viewBox="0 0 320 160" role="img" aria-label="Simulated budget outcome distribution">
+            <rect x="20" y="120" width="18" height="20" fill="#06b6d4" opacity="0.4" rx="2"/>
+            <rect x="44" y="95" width="18" height="45" fill="#06b6d4" opacity="0.6" rx="2"/>
+            <rect x="68" y="65" width="18" height="75" fill="#06b6d4" opacity="0.8" rx="2"/>
+            <rect x="92" y="35" width="18" height="105" fill="#06b6d4" opacity="0.9" rx="2"/>
+            <rect x="116" y="20" width="18" height="120" fill="#10b981" opacity="1.0" rx="2"/>
+            <rect x="140" y="30" width="18" height="110" fill="#10b981" opacity="0.95" rx="2"/>
+            <rect x="164" y="55" width="18" height="85" fill="#10b981" opacity="0.85" rx="2"/>
+            <!-- Budget Threshold Line -->
+            <line x1="188" y1="10" x2="188" y2="145" stroke="#ef4444" stroke-width="2" stroke-dasharray="4 4"/>
+            <text x="188" y="155" text-anchor="middle" fill="#ef4444" font-size="8" font-family="sans-serif">Budget Limit</text>
+            <rect x="194" y="80" width="18" height="60" fill="#ef4444" opacity="0.7" rx="2"/>
+            <rect x="218" y="105" width="18" height="35" fill="#ef4444" opacity="0.5" rx="2"/>
+            <rect x="242" y="125" width="18" height="15" fill="#ef4444" opacity="0.3" rx="2"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 004 / TIMELINE ───────────────────────────────────────────────────── -->
+    <section id="sec-timeline" class="landing-section" data-section="004" aria-label="Event Timeline">
+      <div class="section-content">
+        <div class="section-label">004 / TIMELINE</div>
+        <h2 class="headline-knockout focus-pull">REVERSE SCHEDULED.<br>CRITICAL PATH.</h2>
+        <div class="declarative-copy">
+          <p>Dates move. Plans shouldn't break. See what is critical, and what can wait.</p>
+          <p>Milestones reverse-scheduled from your muhurat or party date.</p>
+          <p>Compressed lead-times flagged instantly so advances are timed correctly.</p>
+          <p class="bold-punchline">Start with the one that matters.</p>
+        </div>
+        <div class="tag-chips-row">
+          <span class="tag-chip">CRITICAL PATH</span>
+          <span class="tag-chip">RECOMPRESS</span>
+          <span class="tag-chip">ICS CALENDAR</span>
+        </div>
+
+        <!-- Interactive Lead Weeks Slider -->
+        <div class="section-interactive-card" role="region" aria-label="Timeline lead time calculator">
+          <div class="slider-group">
+            <div class="slider-header-row">
+              <label for="slider-lead-weeks" class="slider-title">Lead Time Available</label>
+              <span id="display-slider-weeks" class="slider-live-value tabular">26 Weeks</span>
+            </div>
+            <input type="range" id="slider-lead-weeks" class="site-range-input" min="4" max="52" step="2" value="26" aria-label="Adjust available planning weeks">
+          </div>
+        </div>
+
+        <!-- Fallback 2.5D Ribbon Path -->
+        <div class="fallback-visual-container fallback-chart fallback-ribbon" aria-label="Timeline milestone preview">
+          <svg class="fallback-svg" viewBox="0 0 320 100" role="img" aria-label="Milestones on the planning timeline">
+            <path d="M 20 50 Q 90 20 160 50 T 300 50" fill="none" stroke="#f59e0b" stroke-width="3" opacity="0.8"/>
+            <circle cx="20" cy="50" r="7" fill="#f59e0b"/>
+            <text x="20" y="75" text-anchor="middle" fill="#94949e" font-size="8">W-26 Venue</text>
+            <circle cx="90" cy="35" r="5" fill="#e8d5b5"/>
+            <text x="90" y="20" text-anchor="middle" fill="#94949e" font-size="8">W-18 Caterer</text>
+            <circle cx="160" cy="50" r="5" fill="#e8d5b5"/>
+            <text x="160" y="75" text-anchor="middle" fill="#94949e" font-size="8">W-10 Decor</text>
+            <circle cx="230" cy="65" r="5" fill="#e8d5b5"/>
+            <text x="230" y="85" text-anchor="middle" fill="#94949e" font-size="8">W-4 Invites</text>
+            <circle cx="300" cy="50" r="9" fill="#10b981"/>
+            <text x="300" y="75" text-anchor="middle" fill="#10b981" font-weight="700" font-size="9">Day 0</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 005 / VENDORS ────────────────────────────────────────────────────── -->
+    <section id="sec-vendors" class="landing-section" data-section="005" aria-label="Vendor Negotiations">
+      <div class="section-content">
+        <div class="section-label">005 / VENDORS</div>
+        <h2 class="headline-knockout focus-pull">TWO QUOTES.<br>ONE CLEAR ANSWER.</h2>
+        <div class="declarative-copy">
+          <p>Two quotes. One clear answer.</p>
+          <p>We compute category negotiation headroom floors and highlight contract traps.</p>
+          <p>Polite Marathi, Hindi and English negotiation prompts built in.</p>
+          <p class="bold-punchline">Say it politely. Mean it.</p>
+        </div>
+        <div class="tag-chips-row">
+          <span class="tag-chip">QUOTES</span>
+          <span class="tag-chip">RED FLAGS</span>
+          <span class="tag-chip">HEADROOM</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 006 / GUESTS ─────────────────────────────────────────────────────── -->
+    <section id="sec-guests" class="landing-section" data-section="006" aria-label="RSVP & Guests">
+      <div class="section-content">
+        <div class="section-label">006 / GUESTS</div>
+        <h2 class="headline-knockout focus-pull">RSVP NORMS.<br>ZERO WASTE.</h2>
+        <div class="declarative-copy">
+          <p>Not everyone who says yes shows up.</p>
+          <p>Indian hospitality norms predict actual turnout (78% wedding, 72% birthday).</p>
+          <p>Order plates with scientific confidence.</p>
+          <p class="bold-punchline">Waste less. Worry less.</p>
+        </div>
+        <div class="tag-chips-row">
+          <span class="tag-chip">RSVP FORECAST</span>
+          <span class="tag-chip">DIET</span>
+          <span class="tag-chip">BUFFER</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 007 / MONEY ──────────────────────────────────────────────────────── -->
+    <section id="sec-money" class="landing-section" data-section="007" aria-label="Cash Flow">
+      <div class="section-content">
+        <div class="section-label">007 / CASH FLOW</div>
+        <h2 class="headline-knockout focus-pull">PLANNED. COMMITTED.<br>PAID.</h2>
+        <div class="declarative-copy">
+          <p>Planned. Committed. Paid.</p>
+          <p>Track advance payment milestones against your cash flow curve.</p>
+          <p>Never run short on wedding week.</p>
+          <p class="bold-punchline">Cash, in sight.</p>
+        </div>
+        <div class="tag-chips-row">
+          <span class="tag-chip">LEDGER</span>
+          <span class="tag-chip">MILESTONES</span>
+          <span class="tag-chip">ALERTS</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 008 / DAY-OF ─────────────────────────────────────────────────────── -->
+    <section id="sec-dayof" class="landing-section" data-section="008" aria-label="Day-Of Coordination">
+      <div class="section-content">
+        <div class="section-label">008 / DAY-OF MODE</div>
+        <h2 class="headline-knockout focus-pull">ON THE DAY.<br>ONE PAGE.</h2>
+        <div class="declarative-copy">
+          <p>On the day, one page.</p>
+          <p>A minute-by-minute run sheet for family and coordinators.</p>
+          <p>Emergency contact list and vendor arrival schedule.</p>
+          <p class="bold-punchline">You enjoy the event.</p>
+        </div>
+        <div class="tag-chips-row">
+          <span class="tag-chip">RUN SHEET</span>
+          <span class="tag-chip">DAY-OF MODE</span>
+          <span class="tag-chip">PRINT</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 009 / EXPORTS ────────────────────────────────────────────────────── -->
+    <section id="sec-exports" class="landing-section" data-section="009" aria-label="Exports and Privacy">
+      <div class="section-content">
+        <div class="section-label">009 / EXPORTS</div>
+        <h2 class="headline-knockout focus-pull">OFFLINE.<br>FOREVER YOURS.</h2>
+        <div class="declarative-copy">
+          <p>Excel with live formulas. A clean PDF. A link for family.</p>
+          <p>Your plan stays on your device—privacy-first, zero data sales.</p>
+          <p>Download full records with one tap.</p>
+          <p class="bold-punchline">Your plan stays on your device.</p>
+        </div>
+        <div class="tag-chips-row">
+          <span class="tag-chip">EXCEL XLSX</span>
+          <span class="tag-chip">PDF KIT</span>
+          <span class="tag-chip">RFC 5545</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 010 / WORK INDEX ─────────────────────────────────────────────────── -->
+    <section id="sec-plans" class="landing-section" data-section="010" aria-label="Demo Plans">
+      <div class="section-content" style="max-width: 960px;">
+        <div class="section-label">010 / WORK INDEX</div>
+        <h2 class="headline-knockout focus-pull">CURATED PLANS.<br>REAL MATH.</h2>
+        <div class="declarative-copy">
+          <p>Explore pre-computed blueprints tuned for Indian celebrations.</p>
+          <p>Click any row to open and adapt inside the full workspace.</p>
+        </div>
+
+        <!-- Typographic Work Index List -->
+        <div class="work-index-list" role="list">
+          <a href="/app#demo-wedding" class="work-index-row" role="listitem" data-demo="wedding" data-title="Meera &amp; Rohan Wedding" data-meta="300 guests · ₹12,00,000 · Traditional">
+            <span class="work-row-num">01</span>
+            <div class="work-row-details">
+              <span class="work-row-title">Wedding Celebration</span>
+              <span class="work-row-meta">300 Guests · ₹12,00,000 · Traditional Vibe</span>
+            </div>
+            <span class="work-row-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a href="/app#demo-birthday" class="work-index-row" role="listitem" data-demo="birthday" data-title="Aarav's 1st Birthday" data-meta="40 guests · ₹60,000 · Fun Vibe">
+            <span class="work-row-num">02</span>
+            <div class="work-row-details">
+              <span class="work-row-title">Milestone Birthday</span>
+              <span class="work-row-meta">40 Guests · ₹60,000 · Fun Theme</span>
+            </div>
+            <span class="work-row-arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a href="/app#demo-community" class="work-index-row" role="listitem" data-demo="community" data-title="Ganesh Utsav Mahotsav" data-meta="500 guests · ₹3,00,000 · Minimal">
+            <span class="work-row-num">03</span>
+            <div class="work-row-details">
+              <span class="work-row-title">Community Mela</span>
+              <span class="work-row-meta">500 Guests · ₹3,00,000 · Minimal Vibe</span>
+            </div>
+            <span class="work-row-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Floating Cursor Preview Following Mouse -->
+    <div id="cursor-preview" class="cursor-preview-card" aria-hidden="true">
+      <div class="preview-badge">DEMO BLUEPRINT</div>
+      <div id="preview-name" class="preview-name">Wedding Celebration</div>
+      <div id="preview-stat" class="preview-stat">300 guests · ₹12,00,000</div>
+    </div>
+
+    <!-- ── 011 / CELEBRATIONS MARQUEE ───────────────────────────────────────── -->
+    <section id="sec-marquee" class="landing-section" data-section="011" aria-label="Celebration Categories">
+      <div class="section-label" style="margin-bottom: 20px;">011 / FOR EVERY CELEBRATION</div>
+      <div class="marquee-wrapper" aria-hidden="true">
+        <div class="marquee-track">
+          <span class="marquee-item">WEDDINGS</span>
+          <span class="marquee-item">BIRTHDAYS</span>
+          <span class="marquee-item">ANNIVERSARIES</span>
+          <span class="marquee-item">BABY SHOWERS</span>
+          <span class="marquee-item">COMMUNITY UTSAVS</span>
+          <span class="marquee-item">FESTIVALS</span>
+          <span class="marquee-item">GRIHA PRAVESH</span>
+          <!-- Duplicate for seamless looping -->
+          <span class="marquee-item">WEDDINGS</span>
+          <span class="marquee-item">BIRTHDAYS</span>
+          <span class="marquee-item">ANNIVERSARIES</span>
+          <span class="marquee-item">BABY SHOWERS</span>
+          <span class="marquee-item">COMMUNITY UTSAVS</span>
+          <span class="marquee-item">FESTIVALS</span>
+          <span class="marquee-item">GRIHA PRAVESH</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 012 / FOOTER CALL TO ACTION ──────────────────────────────────────── -->
+    <footer id="sec-footer" class="site-footer" data-section="012" role="contentinfo">
+      <div class="footer-wordmark">UTSAV</div>
+      <h2 class="footer-cta-title">So, what are you planning?</h2>
+      <div class="footer-btn-row">
+        <a href="/app" class="hud-btn hud-btn-primary btn-lg">Start a plan</a>
+        <a href="/app#demo-wedding" class="hud-btn btn-lg">Try the demo plan</a>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- Main ES Module Bootstrapper -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
