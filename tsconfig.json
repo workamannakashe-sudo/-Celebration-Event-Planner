@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "noEmit": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2022",
+    "strict": false,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false
+  },
+  "include": [
+    "shared/**/*.js",
+    "server/**/*.js",
+    "frontend/js/**/*.js",
+    "tests/**/*.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "coverage"
+  ]
+}

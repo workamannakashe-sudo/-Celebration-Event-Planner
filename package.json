@@ -1,0 +1,33 @@
+{
+  "name": "utsav",
+  "version": "1.0.0",
+  "description": "Utsav – GenAI event-planning assistant for Meera, the first-time family organiser in India",
+  "type": "module",
+  "main": "server/index.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "dev": "node --watch server/index.js",
+    "start": "node server/index.js",
+    "lint": "eslint .",
+    "typecheck": "tsc --checkJs --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "audit": "npm audit --audit-level=moderate"
+  },
+  "dependencies": {
+    "compression": "^1.8.0",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^2.1.9",
+    "eslint": "^9.17.0",
+    "supertest": "^7.0.0",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.9"
+  }
+}
