@@ -26,6 +26,7 @@ import {
  * @typedef {Object} BudgetPlan
  * @property {number} totalBudget - Original total budget in INR
  * @property {number} contingency - Contingency buffer amount
+ * @property {number} contingencyPct - Contingency buffer percentage (0-100, 1dp)
  * @property {CategoryAllocation[]} categories - Ordered list of allocations
  */
 
@@ -104,9 +105,12 @@ export function allocateBudget(type, totalBudget, vibe, vegOnly) {
     vendorType: name.toLowerCase().replace(/[^a-z]+/g, '_'),
   }));
 
+  const contingencyPct = parseFloat(((adjustedContingency / totalBudget) * 100).toFixed(1));
+
   return {
     totalBudget,
     contingency: adjustedContingency,
+    contingencyPct,
     categories,
   };
 }

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Utsav – Thoughtful GenAI event planning assistant for first-time family organizers in India. Plan weddings, birthdays, and community celebrations with budget clarity, timeline milestones, and cultural warmth.">
+  <title>Utsav – Thoughtful Indian Event Planning Assistant</title>
+
+  <!-- Preconnect to Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600..800;1,9..144,600..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Accessible Skip Link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Aurora Mesh Gradient Background -->
+  <div class="aurora-mesh" aria-hidden="true">
+    <div class="mesh-blob blob-1"></div>
+    <div class="mesh-blob blob-2"></div>
+    <div class="mesh-blob blob-3"></div>
+  </div>
+
+  <div class="app-container">
+    <!-- Header Landmark -->
+    <header class="site-header" role="banner">
+      <div class="header-brand">
+        <div class="brand-icon" aria-hidden="true">🪔</div>
+        <div class="brand-info">
+          <h1>Utsav</h1>
+          <p class="brand-tagline">Thoughtful Event Planning for Meera</p>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <span id="connection-badge" class="status-badge" role="status" aria-live="polite">Checking status...</span>
+
+        <!-- Language Selector -->
+        <label for="select-language" class="sr-only">Choose Language</label>
+        <select id="select-language" class="select-styled" aria-label="Select Language">
+          <option value="en">English (EN)</option>
+          <option value="hi">हिंदी (HI)</option>
+          <option value="mr">मराठी (MR)</option>
+        </select>
+
+        <!-- Theme Toggle Button -->
+        <button id="btn-theme-toggle" class="btn btn-secondary btn-icon" aria-label="Toggle light and dark theme" title="Toggle theme">
+          🌓
+        </button>
+
+        <!-- Chat Drawer Button -->
+        <button id="btn-open-chat" class="btn btn-primary" aria-label="Open Ask Utsav assistant">
+          ✨ Ask Utsav
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-layout">
+      <!-- Aside: Input Panel -->
+      <aside class="sidebar-panel" aria-label="Event Configuration Panel">
+        <div class="panel-header">
+          <h2 class="panel-title">Celebration Setup</h2>
+          <p class="panel-subtitle">Fine-tune details for instant recalculated guidance</p>
+        </div>
+
+        <form id="event-form" onsubmit="event.preventDefault();">
+          <!-- Event Type -->
+          <fieldset class="form-group">
+            <legend class="form-label">Event Type</legend>
+            <div class="segmented-control" role="radiogroup" aria-label="Event Type">
+              <div class="segmented-option">
+                <input type="radio" id="type-wedding" name="event-type" value="wedding" checked>
+                <label for="type-wedding" class="segmented-label">💍 Wedding</label>
+              </div>
+              <div class="segmented-option">
+                <input type="radio" id="type-birthday" name="event-type" value="birthday">
+                <label for="type-birthday" class="segmented-label">🎂 Birthday</label>
+              </div>
+              <div class="segmented-option">
+                <input type="radio" id="type-community" name="event-type" value="community">
+                <label for="type-community" class="segmented-label">🎪 Community</label>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Celebration Name -->
+          <div class="form-group">
+            <label for="input-name" class="form-label">Celebration Name</label>
+            <input type="text" id="input-name" class="input-styled" maxlength="100" placeholder="e.g. Meera & Rohan Wedding" required>
+          </div>
+
+          <!-- Guest Count -->
+          <div class="form-group">
+            <label for="input-guests" class="form-label">Expected Guests</label>
+            <div class="input-with-symbol">
+              <span class="input-symbol" aria-hidden="true">👥</span>
+              <input type="number" id="input-guests" class="input-styled" min="1" max="5000" step="5" required>
+            </div>
+            <p class="form-hint">Used to evaluate per-head catering comfort.</p>
+          </div>
+
+          <!-- Total Budget -->
+          <div class="form-group">
+            <label for="input-budget" class="form-label">Total Budget (INR)</label>
+            <div class="input-with-symbol">
+              <span class="input-symbol" aria-hidden="true">₹</span>
+              <input type="number" id="input-budget" class="input-styled" min="10000" max="100000000" step="5000" required>
+            </div>
+            <p class="form-hint">8% is automatically locked as a contingency buffer.</p>
+          </div>
+
+          <!-- Event Date -->
+          <div class="form-group">
+            <label for="input-date" class="form-label">Event Date</label>
+            <input type="date" id="input-date" class="input-styled" required>
+            <p class="form-hint">Milestones are reverse-scheduled from this date.</p>
+          </div>
+
+          <!-- Vibe -->
+          <fieldset class="form-group">
+            <legend class="form-label">Atmosphere & Vibe</legend>
+            <div class="segmented-control" role="radiogroup" aria-label="Event Vibe">
+              <div class="segmented-option">
+                <input type="radio" id="vibe-traditional" name="event-vibe" value="Traditional" checked>
+                <label for="vibe-traditional" class="segmented-label">Traditional</label>
+              </div>
+              <div class="segmented-option">
+                <input type="radio" id="vibe-elegant" name="event-vibe" value="Elegant">
+                <label for="vibe-elegant" class="segmented-label">Elegant</label>
+              </div>
+              <div class="segmented-option">
+                <input type="radio" id="vibe-fun" name="event-vibe" value="Fun">
+                <label for="vibe-fun" class="segmented-label">Fun</label>
+              </div>
+              <div class="segmented-option">
+                <input type="radio" id="vibe-minimal" name="event-vibe" value="Minimal">
+                <label for="vibe-minimal" class="segmented-label">Minimal</label>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Veg-Only Toggle -->
+          <div class="form-group">
+            <div class="toggle-group">
+              <div>
+                <label for="toggle-veg" class="form-label" style="margin-bottom:0; cursor:pointer;">🌱 100% Vegetarian Menu</label>
+                <p class="form-hint">Saves 8% on catering; shifts directly into buffer.</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="toggle-veg" aria-label="Vegetarian only menu toggle">
+                <span class="slider-switch"></span>
+              </label>
+            </div>
+          </div>
+        </form>
+      </aside>
+
+      <!-- Main Content: Bento Grid Dashboard -->
+      <main id="main-content" class="bento-dashboard" tabindex="-1">
+        <!-- Hero Summary Card -->
+        <section id="card-hero" class="bento-card hero-card" aria-label="Celebration Summary">
+          <!-- Populated by renderHero -->
+        </section>
+
+        <!-- Quick Action Bar -->
+        <div class="hero-action-bar">
+          <button id="btn-copy-plan" class="btn btn-secondary">📋 Copy Plan Summary</button>
+          <button id="btn-export-ics" class="btn btn-secondary">📅 Add to Calendar (.ics)</button>
+          <button id="btn-print-plan" class="btn btn-secondary">🖨️ Print / Save PDF</button>
+        </div>
+
+        <!-- Budget Donut Card -->
+        <section id="card-budget" class="bento-card" aria-label="Budget Breakdown">
+          <!-- Populated by renderBudgetCard -->
+        </section>
+
+        <!-- Timeline Card -->
+        <section id="card-timeline" class="bento-card" aria-label="Planning Milestones">
+          <!-- Populated by renderTimelineCard -->
+        </section>
+
+        <!-- Vendor Checklist Card -->
+        <section id="card-vendors" class="bento-card" aria-label="Vendor Budgets & Negotiations">
+          <!-- Populated by renderVendorCard -->
+        </section>
+
+        <!-- What-If Live Playground Card -->
+        <section id="card-whatif" class="bento-card" aria-label="What-If Scenario Playground">
+          <!-- Populated by renderWhatIfCard -->
+        </section>
+
+        <!-- Ideas & Recommendations Card -->
+        <section id="card-ideas" class="bento-card" aria-label="Creative Themes and Ideas">
+          <!-- Populated by renderIdeasCard -->
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Chat Drawer ("Ask Utsav") -->
+  <div id="chat-backdrop" class="chat-backdrop" aria-hidden="true"></div>
+  <aside id="chat-drawer" class="chat-drawer" aria-label="Ask Utsav Assistant" inert>
+    <div class="chat-drawer-header">
+      <div class="card-title-group">
+        <h3 class="card-title">✨ Ask Utsav</h3>
+        <span class="card-subtitle">Real-time what-if recalculation & vendor advice</span>
+      </div>
+      <button id="btn-close-chat" class="btn btn-secondary btn-icon" aria-label="Close assistant" title="Close">✕</button>
+    </div>
+
+    <!-- Suggested Quick Chips -->
+    <div id="chat-chips" class="chat-chips" aria-label="Suggested questions">
+      <button class="chip-btn" data-prompt="What if we cut budget by 10%?">Cut budget 10%</button>
+      <button class="chip-btn" data-prompt="Can we invite 50 more guests?">Invite +50 guests</button>
+      <button class="chip-btn" data-prompt="What should I ask the caterer before booking?">Ask caterer</button>
+      <button class="chip-btn" data-prompt="Switch to 100% vegetarian">Go vegetarian</button>
+    </div>
+
+    <!-- Message Bubble Area -->
+    <div id="chat-messages" class="chat-messages" role="log" aria-live="polite">
+      <!-- Populated by renderChatMessages -->
+    </div>
+
+    <!-- Input Form -->
+    <div class="chat-drawer-footer">
+      <form id="chat-form" class="chat-input-form">
+        <label for="chat-input" class="sr-only">Type a message to Utsav</label>
+        <input type="text" id="chat-input" class="input-styled" placeholder="Ask a question or try 'cut budget 15%'..." autocomplete="off">
+        <button type="submit" class="btn btn-primary">Send</button>
+      </form>
+    </div>
+  </aside>
+
+  <!-- Screen reader live region for announcements -->
+  <div id="aria-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Main ES Module Script -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

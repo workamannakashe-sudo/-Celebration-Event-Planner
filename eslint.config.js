@@ -21,6 +21,8 @@ export default [
         crypto: 'readonly',
         performance: 'readonly',
         AbortController: 'readonly',
+        AbortSignal: 'readonly',
+        Blob: 'readonly',
         structuredClone: 'readonly',
         global: 'readonly',
         globalThis: 'readonly',
