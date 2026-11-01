@@ -15,6 +15,11 @@ export { assessFeasibility } from './feasibility.js';
 export { buildTimeline } from './timeline.js';
 export { buildVendorChecklist } from './vendors.js';
 export { applyScenario } from './whatif.js';
+export { runStressTest } from './stress.js';
+export { computeTradeoff } from './tradeoff.js';
+export { forecastRsvp } from './rsvp.js';
+export { compareQuotes } from './quotes.js';
+export { analyseDates } from './dates.js';
 
 /** @typedef {import('./budget.js').BudgetPlan} BudgetPlan */
 /** @typedef {import('./feasibility.js').FeasibilityResult} FeasibilityResult */

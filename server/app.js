@@ -17,6 +17,8 @@ import healthRouter from './routes/health.js';
 import planRouter from './routes/plan.js';
 import ideasRouter from './routes/ideas.js';
 import chatRouter from './routes/chat.js';
+import exportRouter from './routes/export.js';
+import stressRouter from './routes/stress.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -64,6 +66,8 @@ export function createApp() {
   app.use('/api/plan', planRouter);
   app.use('/api/ideas', ideasRouter);
   app.use('/api/chat', chatRouter);
+  app.use('/api/export', exportRouter);
+  app.use('/api/stress', stressRouter);
 
   // ── 404 for unknown API routes ───────────────────────────────────────────────
   app.use('/api', (_req, res) => {

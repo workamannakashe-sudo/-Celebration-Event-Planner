@@ -1,10 +1,12 @@
 /**
  * @file frontend/js/render.js
- * @description Safe DOM rendering for Aurora Bento dashboard cards, charts,
+ * @description Safe DOM rendering for Utsav dashboard cards, charts,
  * timeline, vendor checklists, what-if playground, and chat drawer.
+ * SECURITY: All user-generated text is set via textContent, never innerHTML.
  */
 
 import { t } from './i18n.js';
+
 
 /**
  * Format currency in Indian numbering format (e.g., ₹6,50,000).
@@ -54,7 +56,7 @@ export function renderHero(plan, completedTasks, container) {
   const eventDate = new Date(`${inputs.date}T00:00:00`);
   const now = new Date();
   const diffMs = eventDate.getTime() - now.getTime();
-  const daysToGo = Math.max(0, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
+  const daysToGo = isNaN(diffMs) ? 0 : Math.max(0, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
 
   // Total tasks count across timeline and vendors
   const totalTasks = timeline.milestones.length + budget.categories.length;
@@ -189,6 +191,49 @@ export function renderBudgetCard(plan, container) {
 }
 
 /**
+ * Render a compact snapshot of budget for the Overview tab.
+ * @param {import('../../shared/engine/index.js').UtsavPlan} plan
+ * @param {HTMLElement} container
+ */
+export function renderBudgetMiniCard(plan, container) {
+  if (!container || !plan) return;
+  const { budget } = plan;
+  const topCategories = budget.categories.slice(0, 4);
+
+  container.innerHTML = `
+    <div class="card-header">
+      <div class="card-title-group">
+        <h3 class="card-title">💰 Budget Snapshot</h3>
+        <span class="card-subtitle">Total: ${formatINR(budget.totalBudget)}</span>
+      </div>
+      <a href="#budget" class="btn btn-ghost btn-sm" onclick="event.preventDefault(); window.location.hash='#budget';">View Full →</a>
+    </div>
+    <div class="mini-card-body">
+      <div class="mini-category-bars">
+        ${topCategories.map((cat, idx) => {
+          const color = CATEGORY_COLORS[idx % CATEGORY_COLORS.length];
+          return `
+            <div class="mini-bar-row">
+              <div class="mini-bar-label">
+                <span class="mini-dot" style="background-color: ${color}"></span>
+                <span>${cat.name}</span>
+                <span class="mini-amount">${formatINR(cat.amount)} (${cat.pct}%)</span>
+              </div>
+              <div class="mini-bar-track">
+                <div class="mini-bar-fill" style="width: ${cat.pct}%; background-color: ${color};"></div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+      <div class="mini-contingency-tag">
+        🛡️ Contingency Buffer: <strong>${formatINR(budget.contingency)} (${budget.contingencyPct}%)</strong>
+      </div>
+    </div>
+  `;
+}
+
+/**
  * Render the Timeline Card with milestone items.
  * @param {import('../../shared/engine/index.js').UtsavPlan} plan
  * @param {Set<string>} completedTasks
@@ -237,6 +282,40 @@ export function renderTimelineCard(plan, completedTasks, container, onToggleTask
       onToggleTask(target.id);
     });
   });
+}
+
+/**
+ * Render a compact snapshot of upcoming milestones for the Overview tab.
+ * @param {import('../../shared/engine/index.js').UtsavPlan} plan
+ * @param {HTMLElement} container
+ */
+export function renderTimelineMiniCard(plan, container) {
+  if (!container || !plan) return;
+  const { timeline } = plan;
+  const nextMilestones = timeline.milestones.slice(0, 3);
+
+  container.innerHTML = `
+    <div class="card-header">
+      <div class="card-title-group">
+        <h3 class="card-title">📅 Upcoming Milestones</h3>
+        <span class="card-subtitle">${timeline.weeksAvailable} weeks available</span>
+      </div>
+      <a href="#timeline" class="btn btn-ghost btn-sm" onclick="event.preventDefault(); window.location.hash='#timeline';">View Full →</a>
+    </div>
+    <div class="mini-card-body">
+      <div class="mini-timeline-list">
+        ${nextMilestones.map((ms) => `
+          <div class="mini-timeline-item">
+            <span class="mini-timeline-badge">${ms.weeksBefore === 0 ? 'Day 0' : `W-${ms.weeksBefore}`}</span>
+            <div class="mini-timeline-details">
+              <div class="mini-timeline-task">${ms.task}</div>
+              <div class="mini-timeline-date">Due: ${ms.dueDate}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
 }
 
 /**

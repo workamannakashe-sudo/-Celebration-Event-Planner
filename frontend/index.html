@@ -4,12 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Utsav – Thoughtful GenAI event planning assistant for first-time family organizers in India. Plan weddings, birthdays, and community celebrations with budget clarity, timeline milestones, and cultural warmth.">
+  <meta name="theme-color" content="#6B21A8">
   <title>Utsav – Thoughtful Indian Event Planning Assistant</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
 
   <!-- Preconnect to Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600..800;1,9..144,600..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600..800;1,9..144,600..800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Core Stylesheet -->
   <link rel="stylesheet" href="css/styles.css">
@@ -25,192 +29,426 @@
     <div class="mesh-blob blob-3"></div>
   </div>
 
-  <div class="app-container">
-    <!-- Header Landmark -->
+  <!-- ════════════════════════════════════════════════
+       APP SHELL
+  ════════════════════════════════════════════════ -->
+  <div class="app-shell" id="app-shell">
+
+    <!-- ── Site Header ──────────────────────────────── -->
     <header class="site-header" role="banner">
-      <div class="header-brand">
+      <button class="brand-btn" id="btn-home" aria-label="Go to My Plans home">
         <div class="brand-icon" aria-hidden="true">🪔</div>
         <div class="brand-info">
-          <h1>Utsav</h1>
-          <p class="brand-tagline">Thoughtful Event Planning for Meera</p>
+          <span class="brand-name">Utsav</span>
+          <span class="brand-tagline">Thoughtful Event Planning</span>
         </div>
-      </div>
+      </button>
+
+      <nav class="header-nav" aria-label="Main navigation" id="header-nav">
+        <!-- populated by JS when a plan is open -->
+      </nav>
 
       <div class="header-controls">
-        <span id="connection-badge" class="status-badge" role="status" aria-live="polite">Checking status...</span>
+        <span id="connection-badge" class="status-badge" role="status" aria-live="polite">Checking…</span>
 
         <!-- Language Selector -->
         <label for="select-language" class="sr-only">Choose Language</label>
         <select id="select-language" class="select-styled" aria-label="Select Language">
-          <option value="en">English (EN)</option>
-          <option value="hi">हिंदी (HI)</option>
-          <option value="mr">मराठी (MR)</option>
+          <option value="en">EN</option>
+          <option value="hi">हिंदी</option>
+          <option value="mr">मराठी</option>
         </select>
 
         <!-- Theme Toggle Button -->
-        <button id="btn-theme-toggle" class="btn btn-secondary btn-icon" aria-label="Toggle light and dark theme" title="Toggle theme">
-          🌓
-        </button>
+        <button id="btn-theme-toggle" class="btn btn-icon" aria-label="Toggle light and dark theme" title="Toggle theme">🌓</button>
 
-        <!-- Chat Drawer Button -->
-        <button id="btn-open-chat" class="btn btn-primary" aria-label="Open Ask Utsav assistant">
+        <!-- Ask Utsav chat -->
+        <button id="btn-open-chat" class="btn btn-primary" aria-label="Open Ask Utsav assistant" style="display:none;">
           ✨ Ask Utsav
         </button>
       </div>
     </header>
 
-    <!-- Main Container -->
-    <div class="main-layout">
-      <!-- Aside: Input Panel -->
-      <aside class="sidebar-panel" aria-label="Event Configuration Panel">
-        <div class="panel-header">
-          <h2 class="panel-title">Celebration Setup</h2>
-          <p class="panel-subtitle">Fine-tune details for instant recalculated guidance</p>
+    <!-- ── Main content area ─────────────────────────── -->
+    <main id="main-content" class="main-content" tabindex="-1">
+
+      <!-- ══ VIEW: Home / My Plans Grid ═══════════════ -->
+      <div id="view-home" class="view" data-view="home" aria-label="My Plans">
+        <section class="home-hero">
+          <h1 class="home-title">Namaste, Meera! Welcome to Utsav <span class="wave-emoji">👋</span></h1>
+          <p class="home-subtitle">Your thoughtful event planning companion for every celebration.</p>
+          <button id="btn-new-plan" class="btn btn-primary btn-lg pulse-ring">
+            ✨ Plan a New Celebration
+          </button>
+        </section>
+
+        <section class="plans-section" aria-label="Saved Plans">
+          <div class="plans-header">
+            <h2 class="plans-heading">My Plans</h2>
+            <span id="plans-count" class="plans-count-badge"></span>
+          </div>
+          <div id="plans-grid" class="plans-grid" role="list">
+            <!-- populated by JS -->
+          </div>
+          <div id="plans-empty" class="plans-empty" style="display:none;">
+            <div class="empty-icon" aria-hidden="true">🎊</div>
+            <p class="empty-text">No plans yet — create your first celebration above!</p>
+          </div>
+        </section>
+      </div>
+
+      <!-- ══ VIEW: New Plan Wizard (2-step) ══════════════ -->
+      <div id="view-wizard" class="view" data-view="wizard" aria-label="New Plan Wizard" style="display:none;">
+        <div class="wizard-container">
+          <div class="wizard-progress" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="2" aria-label="Wizard progress">
+            <div class="wizard-step active" data-step="1">
+              <div class="step-circle">1</div>
+              <span class="step-label">Event Details</span>
+            </div>
+            <div class="wizard-connector"></div>
+            <div class="wizard-step" data-step="2">
+              <div class="step-circle">2</div>
+              <span class="step-label">Budget & Vibe</span>
+            </div>
+          </div>
+
+          <!-- Step 1 -->
+          <div id="wizard-step-1" class="wizard-step-content">
+            <h2 class="wizard-title">Tell us about your celebration</h2>
+            <p class="wizard-subtitle">All fields are used to customise your plan — nothing is shared externally.</p>
+
+            <form id="wizard-form-1" onsubmit="event.preventDefault();">
+              <!-- Event Type -->
+              <fieldset class="form-group">
+                <legend class="form-label">What are you celebrating?</legend>
+                <div class="type-cards-row" role="radiogroup" aria-label="Event Type">
+                  <label class="type-card" for="type-wedding">
+                    <input type="radio" id="type-wedding" name="event-type" value="wedding" checked>
+                    <span class="type-card-icon">💍</span>
+                    <span class="type-card-label">Wedding</span>
+                  </label>
+                  <label class="type-card" for="type-birthday">
+                    <input type="radio" id="type-birthday" name="event-type" value="birthday">
+                    <span class="type-card-icon">🎂</span>
+                    <span class="type-card-label">Birthday</span>
+                  </label>
+                  <label class="type-card" for="type-community">
+                    <input type="radio" id="type-community" name="event-type" value="community">
+                    <span class="type-card-icon">🎪</span>
+                    <span class="type-card-label">Community</span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <!-- Name -->
+              <div class="form-group">
+                <label for="w-input-name" class="form-label">Celebration Name</label>
+                <input type="text" id="w-input-name" class="input-styled" maxlength="100"
+                       placeholder="e.g. Meera &amp; Rohan Wedding" required>
+              </div>
+
+              <!-- Date -->
+              <div class="form-group">
+                <label for="w-input-date" class="form-label">Event Date</label>
+                <input type="date" id="w-input-date" class="input-styled" required>
+                <p class="form-hint">Milestones are reverse-scheduled from this date.</p>
+              </div>
+
+              <!-- Guest Count -->
+              <div class="form-group">
+                <label for="w-input-guests" class="form-label">Expected Guests</label>
+                <div class="input-with-symbol">
+                  <span class="input-symbol" aria-hidden="true">👥</span>
+                  <input type="number" id="w-input-guests" class="input-styled" min="1" max="5000" step="5" value="200" required>
+                </div>
+                <p class="form-hint">Used to evaluate per-head catering comfort.</p>
+              </div>
+
+              <div class="wizard-btn-row">
+                <button type="button" id="btn-wizard-cancel" class="btn btn-ghost">Cancel</button>
+                <button type="button" id="btn-wizard-next" class="btn btn-primary">Next: Budget &amp; Vibe →</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Step 2 -->
+          <div id="wizard-step-2" class="wizard-step-content" style="display:none;">
+            <h2 class="wizard-title">Budget &amp; atmosphere</h2>
+            <p class="wizard-subtitle">Adjust these at any time in the workspace — we use them to personalise every recommendation.</p>
+
+            <form id="wizard-form-2" onsubmit="event.preventDefault();">
+              <!-- Budget -->
+              <div class="form-group">
+                <label for="w-input-budget" class="form-label">Total Budget (INR)</label>
+                <div class="input-with-symbol">
+                  <span class="input-symbol" aria-hidden="true">₹</span>
+                  <input type="number" id="w-input-budget" class="input-styled" min="10000" max="100000000" step="5000" value="500000" required>
+                </div>
+                <p class="form-hint">8% is automatically locked as a contingency buffer.</p>
+              </div>
+
+              <!-- Vibe -->
+              <fieldset class="form-group">
+                <legend class="form-label">Atmosphere &amp; Vibe</legend>
+                <div class="vibe-pills" role="radiogroup" aria-label="Event Vibe">
+                  <label class="vibe-pill" for="vibe-traditional">
+                    <input type="radio" id="vibe-traditional" name="event-vibe" value="Traditional" checked>
+                    <span>🛕 Traditional</span>
+                  </label>
+                  <label class="vibe-pill" for="vibe-elegant">
+                    <input type="radio" id="vibe-elegant" name="event-vibe" value="Elegant">
+                    <span>✨ Elegant</span>
+                  </label>
+                  <label class="vibe-pill" for="vibe-fun">
+                    <input type="radio" id="vibe-fun" name="event-vibe" value="Fun">
+                    <span>🎉 Fun</span>
+                  </label>
+                  <label class="vibe-pill" for="vibe-minimal">
+                    <input type="radio" id="vibe-minimal" name="event-vibe" value="Minimal">
+                    <span>🍃 Minimal</span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <!-- Veg-Only Toggle -->
+              <div class="form-group">
+                <div class="toggle-group">
+                  <div>
+                    <label for="w-toggle-veg" class="form-label" style="margin-bottom:0; cursor:pointer;">🌱 100% Vegetarian Menu</label>
+                    <p class="form-hint">Saves 8% on catering; shifts directly into buffer.</p>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="w-toggle-veg" aria-label="Vegetarian only menu toggle">
+                    <span class="slider-switch"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="wizard-btn-row">
+                <button type="button" id="btn-wizard-back" class="btn btn-ghost">← Back</button>
+                <button type="button" id="btn-wizard-create" class="btn btn-primary btn-create">🎉 Create My Plan</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ VIEW: Plan Workspace ════════════════════════ -->
+      <div id="view-workspace" class="view" data-view="workspace" aria-label="Plan Workspace" style="display:none;">
+
+        <!-- Workspace Topbar -->
+        <div class="workspace-topbar">
+          <div class="workspace-title-group">
+            <h2 id="ws-plan-name" class="ws-plan-name">Celebration</h2>
+            <div class="ws-meta-chips" id="ws-meta-chips">
+              <!-- date, guests, budget chips populated by JS -->
+            </div>
+          </div>
+          <div class="workspace-actions">
+            <button id="btn-export-excel" class="btn btn-secondary btn-sm" title="Download Excel">📊 Excel</button>
+            <button id="btn-export-pdf"   class="btn btn-secondary btn-sm" title="Download PDF">📄 PDF</button>
+            <button id="btn-export-ics"   class="btn btn-secondary btn-sm" title="Add to calendar">📅 .ics</button>
+            <button id="btn-open-chat"    class="btn btn-primary  btn-sm">✨ Ask Utsav</button>
+          </div>
         </div>
 
-        <form id="event-form" onsubmit="event.preventDefault();">
-          <!-- Event Type -->
-          <fieldset class="form-group">
-            <legend class="form-label">Event Type</legend>
-            <div class="segmented-control" role="radiogroup" aria-label="Event Type">
-              <div class="segmented-option">
-                <input type="radio" id="type-wedding" name="event-type" value="wedding" checked>
-                <label for="type-wedding" class="segmented-label">💍 Wedding</label>
-              </div>
-              <div class="segmented-option">
-                <input type="radio" id="type-birthday" name="event-type" value="birthday">
-                <label for="type-birthday" class="segmented-label">🎂 Birthday</label>
-              </div>
-              <div class="segmented-option">
-                <input type="radio" id="type-community" name="event-type" value="community">
-                <label for="type-community" class="segmented-label">🎪 Community</label>
-              </div>
-            </div>
-          </fieldset>
+        <!-- Tab Bar -->
+        <nav class="tab-bar" aria-label="Plan workspace tabs" role="tablist">
+          <button class="tab-btn active" role="tab" aria-selected="true"  data-tab="overview"   aria-controls="tab-overview">Overview</button>
+          <button class="tab-btn"        role="tab" aria-selected="false" data-tab="budget"     aria-controls="tab-budget">Budget</button>
+          <button class="tab-btn"        role="tab" aria-selected="false" data-tab="timeline"   aria-controls="tab-timeline">Timeline</button>
+          <button class="tab-btn"        role="tab" aria-selected="false" data-tab="vendors"    aria-controls="tab-vendors">Vendors</button>
+          <button class="tab-btn"        role="tab" aria-selected="false" data-tab="whatif"     aria-controls="tab-whatif">What-If</button>
+          <button class="tab-btn"        role="tab" aria-selected="false" data-tab="stress"     aria-controls="tab-stress">Stress Test</button>
+          <button class="tab-btn"        role="tab" aria-selected="false" data-tab="tradeoff"   aria-controls="tab-tradeoff">Trade-off</button>
+          <button class="tab-btn"        role="tab" aria-selected="false" data-tab="rsvp"       aria-controls="tab-rsvp">RSVP Forecast</button>
+          <button class="tab-btn"        role="tab" aria-selected="false" data-tab="quotes"     aria-controls="tab-quotes">Quotes</button>
+          <button class="tab-btn"        role="tab" aria-selected="false" data-tab="ideas"      aria-controls="tab-ideas">Ideas</button>
+        </nav>
 
-          <!-- Celebration Name -->
-          <div class="form-group">
-            <label for="input-name" class="form-label">Celebration Name</label>
-            <input type="text" id="input-name" class="input-styled" maxlength="100" placeholder="e.g. Meera & Rohan Wedding" required>
-          </div>
+        <!-- Tab Panels -->
+        <div class="tab-panels">
 
-          <!-- Guest Count -->
-          <div class="form-group">
-            <label for="input-guests" class="form-label">Expected Guests</label>
-            <div class="input-with-symbol">
-              <span class="input-symbol" aria-hidden="true">👥</span>
-              <input type="number" id="input-guests" class="input-styled" min="1" max="5000" step="5" required>
-            </div>
-            <p class="form-hint">Used to evaluate per-head catering comfort.</p>
-          </div>
-
-          <!-- Total Budget -->
-          <div class="form-group">
-            <label for="input-budget" class="form-label">Total Budget (INR)</label>
-            <div class="input-with-symbol">
-              <span class="input-symbol" aria-hidden="true">₹</span>
-              <input type="number" id="input-budget" class="input-styled" min="10000" max="100000000" step="5000" required>
-            </div>
-            <p class="form-hint">8% is automatically locked as a contingency buffer.</p>
-          </div>
-
-          <!-- Event Date -->
-          <div class="form-group">
-            <label for="input-date" class="form-label">Event Date</label>
-            <input type="date" id="input-date" class="input-styled" required>
-            <p class="form-hint">Milestones are reverse-scheduled from this date.</p>
-          </div>
-
-          <!-- Vibe -->
-          <fieldset class="form-group">
-            <legend class="form-label">Atmosphere & Vibe</legend>
-            <div class="segmented-control" role="radiogroup" aria-label="Event Vibe">
-              <div class="segmented-option">
-                <input type="radio" id="vibe-traditional" name="event-vibe" value="Traditional" checked>
-                <label for="vibe-traditional" class="segmented-label">Traditional</label>
-              </div>
-              <div class="segmented-option">
-                <input type="radio" id="vibe-elegant" name="event-vibe" value="Elegant">
-                <label for="vibe-elegant" class="segmented-label">Elegant</label>
-              </div>
-              <div class="segmented-option">
-                <input type="radio" id="vibe-fun" name="event-vibe" value="Fun">
-                <label for="vibe-fun" class="segmented-label">Fun</label>
-              </div>
-              <div class="segmented-option">
-                <input type="radio" id="vibe-minimal" name="event-vibe" value="Minimal">
-                <label for="vibe-minimal" class="segmented-label">Minimal</label>
-              </div>
-            </div>
-          </fieldset>
-
-          <!-- Veg-Only Toggle -->
-          <div class="form-group">
-            <div class="toggle-group">
-              <div>
-                <label for="toggle-veg" class="form-label" style="margin-bottom:0; cursor:pointer;">🌱 100% Vegetarian Menu</label>
-                <p class="form-hint">Saves 8% on catering; shifts directly into buffer.</p>
-              </div>
-              <label class="toggle-switch">
-                <input type="checkbox" id="toggle-veg" aria-label="Vegetarian only menu toggle">
-                <span class="slider-switch"></span>
-              </label>
+          <!-- 1. Overview -->
+          <div id="tab-overview" class="tab-panel active" role="tabpanel" aria-label="Overview">
+            <section id="card-hero" class="bento-card hero-card" aria-label="Celebration Summary"></section>
+            <div class="overview-grid">
+              <section id="card-budget-mini" class="bento-card" aria-label="Budget Snapshot"></section>
+              <section id="card-timeline-mini" class="bento-card" aria-label="Next Milestones"></section>
             </div>
           </div>
-        </form>
-      </aside>
 
-      <!-- Main Content: Bento Grid Dashboard -->
-      <main id="main-content" class="bento-dashboard" tabindex="-1">
-        <!-- Hero Summary Card -->
-        <section id="card-hero" class="bento-card hero-card" aria-label="Celebration Summary">
-          <!-- Populated by renderHero -->
-        </section>
+          <!-- 2. Budget -->
+          <div id="tab-budget" class="tab-panel" role="tabpanel" aria-label="Budget Breakdown" style="display:none;">
+            <section id="card-budget" class="bento-card" aria-label="Full Budget Breakdown"></section>
+          </div>
 
-        <!-- Quick Action Bar -->
-        <div class="hero-action-bar">
-          <button id="btn-copy-plan" class="btn btn-secondary">📋 Copy Plan Summary</button>
-          <button id="btn-export-ics" class="btn btn-secondary">📅 Add to Calendar (.ics)</button>
-          <button id="btn-print-plan" class="btn btn-secondary">🖨️ Print / Save PDF</button>
-        </div>
+          <!-- 3. Timeline -->
+          <div id="tab-timeline" class="tab-panel" role="tabpanel" aria-label="Planning Timeline" style="display:none;">
+            <section id="card-timeline" class="bento-card" aria-label="Planning Milestones"></section>
+          </div>
 
-        <!-- Budget Donut Card -->
-        <section id="card-budget" class="bento-card" aria-label="Budget Breakdown">
-          <!-- Populated by renderBudgetCard -->
-        </section>
+          <!-- 4. Vendors -->
+          <div id="tab-vendors" class="tab-panel" role="tabpanel" aria-label="Vendor Checklist" style="display:none;">
+            <section id="card-vendors" class="bento-card" aria-label="Vendor Budgets"></section>
+          </div>
 
-        <!-- Timeline Card -->
-        <section id="card-timeline" class="bento-card" aria-label="Planning Milestones">
-          <!-- Populated by renderTimelineCard -->
-        </section>
+          <!-- 5. What-If -->
+          <div id="tab-whatif" class="tab-panel" role="tabpanel" aria-label="What-If Playground" style="display:none;">
+            <section id="card-whatif" class="bento-card" aria-label="What-If Scenarios"></section>
+          </div>
 
-        <!-- Vendor Checklist Card -->
-        <section id="card-vendors" class="bento-card" aria-label="Vendor Budgets & Negotiations">
-          <!-- Populated by renderVendorCard -->
-        </section>
+          <!-- 6. Stress Test -->
+          <div id="tab-stress" class="tab-panel" role="tabpanel" aria-label="Budget Stress Test" style="display:none;">
+            <section id="card-stress" class="bento-card" aria-label="Monte Carlo Stress Test">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h3 class="card-title">💥 Budget Stress Test</h3>
+                  <span class="card-subtitle">Monte Carlo simulation – 5 000 runs with random cost shocks</span>
+                </div>
+                <button id="btn-run-stress" class="btn btn-primary btn-sm">▶ Run Simulation</button>
+              </div>
+              <div id="stress-result" class="stress-placeholder">
+                <p>Click <strong>Run Simulation</strong> to stress-test your plan against random cost overruns.</p>
+              </div>
+            </section>
+          </div>
 
-        <!-- What-If Live Playground Card -->
-        <section id="card-whatif" class="bento-card" aria-label="What-If Scenario Playground">
-          <!-- Populated by renderWhatIfCard -->
-        </section>
+          <!-- 7. Trade-off Studio -->
+          <div id="tab-tradeoff" class="tab-panel" role="tabpanel" aria-label="Priority Trade-off Studio" style="display:none;">
+            <section id="card-tradeoff" class="bento-card" aria-label="Trade-off Studio">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h3 class="card-title">⚖️ Priority Trade-off Studio</h3>
+                  <span class="card-subtitle">Boost one category; see proportional cuts across the rest</span>
+                </div>
+              </div>
+              <div id="tradeoff-controls" class="tradeoff-controls">
+                <div class="form-group">
+                  <label for="tradeoff-category" class="form-label">Boost which category?</label>
+                  <select id="tradeoff-category" class="select-styled" aria-label="Category to boost"></select>
+                </div>
+                <div class="form-group">
+                  <label for="tradeoff-amount" class="form-label">Extra amount (₹)</label>
+                  <input type="number" id="tradeoff-amount" class="input-styled" min="1000" step="1000" value="50000">
+                </div>
+                <button id="btn-compute-tradeoff" class="btn btn-primary">Compute Trade-off</button>
+              </div>
+              <div id="tradeoff-result" class="tradeoff-result" style="display:none;"></div>
+            </section>
+          </div>
 
-        <!-- Ideas & Recommendations Card -->
-        <section id="card-ideas" class="bento-card" aria-label="Creative Themes and Ideas">
-          <!-- Populated by renderIdeasCard -->
-        </section>
-      </main>
-    </div>
-  </div>
+          <!-- 8. RSVP Forecast -->
+          <div id="tab-rsvp" class="tab-panel" role="tabpanel" aria-label="RSVP Forecast" style="display:none;">
+            <section id="card-rsvp" class="bento-card" aria-label="RSVP and Attendance Forecast">
+              <!-- populated by JS -->
+            </section>
+          </div>
 
-  <!-- Chat Drawer ("Ask Utsav") -->
+          <!-- 9. Quotes Comparer -->
+          <div id="tab-quotes" class="tab-panel" role="tabpanel" aria-label="Vendor Quote Comparer" style="display:none;">
+            <section id="card-quotes" class="bento-card" aria-label="Quote Comparer">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h3 class="card-title">💬 Vendor Quote Comparer</h3>
+                  <span class="card-subtitle">Enter up to 4 quotes for any category to find the best deal</span>
+                </div>
+              </div>
+              <div class="quotes-form" id="quotes-form-container">
+                <div class="form-group">
+                  <label for="quote-category" class="form-label">Category</label>
+                  <select id="quote-category" class="select-styled" aria-label="Quote category"></select>
+                </div>
+                <div id="quotes-vendor-list" class="quotes-vendor-list">
+                  <!-- Vendor quote rows -->
+                  <div class="quote-row">
+                    <input type="text"   class="input-styled quote-name"  placeholder="Vendor 1 name" aria-label="Vendor 1 name">
+                    <input type="number" class="input-styled quote-price" placeholder="Quote (₹)" min="0" step="100" aria-label="Vendor 1 quote price">
+                  </div>
+                  <div class="quote-row">
+                    <input type="text"   class="input-styled quote-name"  placeholder="Vendor 2 name" aria-label="Vendor 2 name">
+                    <input type="number" class="input-styled quote-price" placeholder="Quote (₹)" min="0" step="100" aria-label="Vendor 2 quote price">
+                  </div>
+                  <div class="quote-row">
+                    <input type="text"   class="input-styled quote-name"  placeholder="Vendor 3 name" aria-label="Vendor 3 name">
+                    <input type="number" class="input-styled quote-price" placeholder="Quote (₹)" min="0" step="100" aria-label="Vendor 3 quote price">
+                  </div>
+                  <div class="quote-row">
+                    <input type="text"   class="input-styled quote-name"  placeholder="Vendor 4 name" aria-label="Vendor 4 name">
+                    <input type="number" class="input-styled quote-price" placeholder="Quote (₹)" min="0" step="100" aria-label="Vendor 4 quote price">
+                  </div>
+                </div>
+                <button id="btn-compare-quotes" class="btn btn-primary">Compare Quotes</button>
+              </div>
+              <div id="quotes-result" class="quotes-result" style="display:none;"></div>
+            </section>
+          </div>
+
+          <!-- 10. Ideas & Creative -->
+          <div id="tab-ideas" class="tab-panel" role="tabpanel" aria-label="Creative Ideas" style="display:none;">
+            <section id="card-ideas" class="bento-card" aria-label="Creative Themes and Ideas"></section>
+          </div>
+
+        </div><!-- /tab-panels -->
+
+        <!-- Sidebar: quick-edit form -->
+        <aside id="ws-sidebar" class="ws-sidebar sidebar-panel" aria-label="Plan Quick-Edit">
+          <div class="sidebar-header">
+            <h3 class="sidebar-title">Quick Edit</h3>
+            <p class="sidebar-subtitle">Changes recalculate instantly</p>
+          </div>
+          <form id="ws-form" onsubmit="event.preventDefault();">
+            <div class="form-group">
+              <label for="ws-input-guests" class="form-label">👥 Guests</label>
+              <input type="number" id="ws-input-guests" class="input-styled" min="1" max="5000" step="5">
+            </div>
+            <div class="form-group">
+              <label for="ws-input-budget" class="form-label">₹ Budget (INR)</label>
+              <input type="number" id="ws-input-budget" class="input-styled" min="10000" max="100000000" step="5000">
+            </div>
+            <div class="form-group">
+              <label for="ws-input-date" class="form-label">📅 Event Date</label>
+              <input type="date" id="ws-input-date" class="input-styled">
+            </div>
+            <div class="form-group">
+              <fieldset>
+                <legend class="form-label">🎨 Vibe</legend>
+                <div class="vibe-pills vibe-pills-sm" role="radiogroup" aria-label="Event Vibe">
+                  <label class="vibe-pill" for="ws-vibe-traditional"><input type="radio" id="ws-vibe-traditional" name="ws-vibe" value="Traditional"><span>Traditional</span></label>
+                  <label class="vibe-pill" for="ws-vibe-elegant"><input type="radio" id="ws-vibe-elegant" name="ws-vibe" value="Elegant"><span>Elegant</span></label>
+                  <label class="vibe-pill" for="ws-vibe-fun"><input type="radio" id="ws-vibe-fun" name="ws-vibe" value="Fun"><span>Fun</span></label>
+                  <label class="vibe-pill" for="ws-vibe-minimal"><input type="radio" id="ws-vibe-minimal" name="ws-vibe" value="Minimal"><span>Minimal</span></label>
+                </div>
+              </fieldset>
+            </div>
+            <div class="form-group">
+              <div class="toggle-group">
+                <label for="ws-toggle-veg" class="form-label" style="margin-bottom:0;">🌱 Veg Only</label>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="ws-toggle-veg" aria-label="Vegetarian only">
+                  <span class="slider-switch"></span>
+                </label>
+              </div>
+            </div>
+          </form>
+        </aside>
+
+      </div><!-- /view-workspace -->
+
+    </main><!-- /main-content -->
+  </div><!-- /app-shell -->
+
+  <!-- ════════════════════════════════════════════════
+       CHAT DRAWER ("Ask Utsav")
+  ════════════════════════════════════════════════ -->
   <div id="chat-backdrop" class="chat-backdrop" aria-hidden="true"></div>
   <aside id="chat-drawer" class="chat-drawer" aria-label="Ask Utsav Assistant" inert>
     <div class="chat-drawer-header">
       <div class="card-title-group">
         <h3 class="card-title">✨ Ask Utsav</h3>
-        <span class="card-subtitle">Real-time what-if recalculation & vendor advice</span>
+        <span class="card-subtitle">Real-time what-if &amp; vendor advice</span>
       </div>
-      <button id="btn-close-chat" class="btn btn-secondary btn-icon" aria-label="Close assistant" title="Close">✕</button>
+      <button id="btn-close-chat" class="btn btn-icon" aria-label="Close assistant" title="Close">✕</button>
     </div>
 
     <!-- Suggested Quick Chips -->
@@ -221,22 +459,20 @@
       <button class="chip-btn" data-prompt="Switch to 100% vegetarian">Go vegetarian</button>
     </div>
 
-    <!-- Message Bubble Area -->
-    <div id="chat-messages" class="chat-messages" role="log" aria-live="polite">
-      <!-- Populated by renderChatMessages -->
-    </div>
+    <!-- Message Area -->
+    <div id="chat-messages" class="chat-messages" role="log" aria-live="polite"></div>
 
     <!-- Input Form -->
     <div class="chat-drawer-footer">
       <form id="chat-form" class="chat-input-form">
         <label for="chat-input" class="sr-only">Type a message to Utsav</label>
-        <input type="text" id="chat-input" class="input-styled" placeholder="Ask a question or try 'cut budget 15%'..." autocomplete="off">
+        <input type="text" id="chat-input" class="input-styled" placeholder="Ask anything about your plan…" autocomplete="off">
         <button type="submit" class="btn btn-primary">Send</button>
       </form>
     </div>
   </aside>
 
-  <!-- Screen reader live region for announcements -->
+  <!-- Screen reader live region -->
   <div id="aria-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
   <!-- Main ES Module Script -->

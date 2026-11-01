@@ -5,8 +5,8 @@
 
 [![CI](https://github.com/workamannakashe-sudo/-Celebration-Event-Planner/actions/workflows/ci.yml/badge.svg)](https://github.com/workamannakashe-sudo/-Celebration-Event-Planner/actions/workflows/ci.yml)
 [![Node](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org/)
-[![Tests](https://img.shields.io/badge/tests-105%20passed-success.svg)](https://vitest.dev/)
-[![Coverage](https://img.shields.io/badge/coverage-96%25-blue.svg)](https://vitest.dev/)
+[![Tests](https://img.shields.io/badge/tests-128%20passed-success.svg)](https://vitest.dev/)
+[![Coverage](https://img.shields.io/badge/coverage-96.5%25-blue.svg)](https://vitest.dev/)
 [![WCAG](https://img.shields.io/badge/WCAG%202.2-AA%20Compliant-purple.svg)](https://www.w3.org/WAI/standards-guidelines/wcag/)
 
 ---
@@ -263,43 +263,43 @@ Utsav is designed to work completely out-of-the-box **without any API key**:
 - **Sub-150 KB Frontend**: Total static assets stay well below 150 KB (excluding web fonts).
 - **O(Categories) Engine**: Planning engine operations execute in under 1 millisecond.
 - **In-Memory LRU Cache**: Gemini responses are cached using an in-memory LRU keyed by the SHA-256 hash of validated inputs, preventing redundant API calls.
-- **Debounced Recomputation**: 120 ms input debouncing prevents UI thrashing during rapid typing or slider dragging.
 - **Gzip & Compression**: Middleware compresses static assets and JSON responses.
 
 ---
 
-## 10. Testing
+## 10. Testing & Verification
 
-The test suite contains **102 tests** across engine, server, AI, and frontend accessibility:
-- **Engine Tests (`tests/engine/`)**:
-  - Invariant: budget allocations sum exactly to total budget across all 3 types × 4 vibes × veg on/off (24 permutations).
-  - Feasibility thresholds and math for `maxGuestsThatFit` and `budgetNeeded`.
-  - Timeline ordering, date compression, and past-date rejection.
-  - What-if scenario deltas and reversibility.
-- **Server Tests (`tests/server/`)**:
-  - Route validation: rejecting unknown keys, bodies > 20 KB, and invalid dates.
-  - Health endpoint status and error envelope shape (`{ error: { code, message } }`).
+The test suite contains **128 unit and integration tests** across 13 test files covering 96.5% of statements and 100% of functions:
+- **Engine Unit Tests (`tests/engine/`)**:
+  - `budget.test.js` (29 tests): Invariant tests across all 3 event types × 4 vibes × veg on/off permutations; category allocations sum exactly to total budget.
+  - `feasibility.test.js` (6 tests): Threshold detection (`Tight`, `Comfortable`, `Generous`), `maxGuestsThatFit`, and deficit math.
+  - `timeline.test.js` (8 tests): Chronological milestone generation, compressed lead times, and date validation.
+  - `whatif.test.js` (10 tests): Instant recalculation deltas, scenario reversibility, and state invariants.
+  - `stress.test.js` (5 tests): Deterministic Monte Carlo simulation, cost percentiles (p50, p75, p95), overrun percentages, and risk categorisation.
+  - `tradeoff.test.js` (3 tests): Proportional category reductions, budget preservation, and minimum floor protection.
+  - `rsvp.test.js` (4 tests): Headcount norms by event type, catering buffer recommendations, and tailored insights.
+  - `quotes.test.js` (3 tests): Multi-quote price ranking, category negotiation headroom floors, and budget overrun detection.
+  - `dates.test.js` (3 tests): Auspicious muhurat scoring, Pitru Paksha blackout detection, and nearby alternative suggestions.
+- **Server Route & Integration Tests (`tests/server/`)**:
+  - `routes.test.js` (18 tests): Rate limiting, input validation, 20 KB body limits, health check envelope, and fallback routing.
+  - `export.test.js` (5 tests): Excel (`.xlsx`) binary export, PDF (`.pdf`) document export, and Monte Carlo stress test endpoint validation.
 - **AI & Security Tests (`tests/ai/`)**:
-  - Mocked Gemini responses, handling malformed JSON, timeouts, and HTTP 429 rate limits.
-  - Narration guard rejecting invented numbers.
-  - Prompt injection sanitization and tag boundary checks.
-- **Frontend & A11y Tests (`tests/a11y/`)**:
-  - jsdom smoke checks verifying landmarks, labels, skip link, and ARIA roles.
-  - i18n fallback and parameter substitution.
-  - RFC 5545 `.ics` formatting and character escaping.
+  - `gemini.test.js` (16 tests): Gemini API client with exponential backoff on HTTP 429, schema validation, AST number guard rejection of hallucinated math, and prompt injection defense.
+- **Frontend & Accessibility Smoke Tests (`tests/a11y/`)**:
+  - `frontend.test.js` (18 tests): WCAG 2.2 AA landmarks, skip-link navigation, form input labels, aria-live region announcements, RFC 5545 `.ics` formatting, and multilingual i18n switching.
 
-### Running Tests
+### Running Quality Gates
 ```bash
-# Run all tests once
+# Run all 128 tests
 npm test
 
-# Run tests with full v8 coverage report
+# Run tests with full v8 coverage report (>96.5% coverage)
 npm run test:coverage
 
-# Run linting
+# Run ESLint (0 errors, 0 warnings)
 npm run lint
 
-# Run TypeScript type check
+# Run strict TypeScript type check (0 errors)
 npm run typecheck
 ```
 
@@ -319,7 +319,7 @@ npm run typecheck
 
 - **Multi-Day Itineraries**: Current engine plans single-day primary events; future releases will support multi-day wedding schedules (Mehendi, Sangeet, Reception).
 - **Live Vendor Marketplace**: Integration with localized vendor directories and live availability calendars.
-- **PDF Export Engine**: Expanding print styles into downloadable multi-page PDF booklets with venue floor plans.
+- **Collaborative Family Sharing**: WebRTC / WebSocket real-time co-planning for family members across cities.
 
 ---
 
@@ -327,14 +327,15 @@ npm run typecheck
 
 | Evaluation Area | Implemented Solutions | Key Files & Verification Tests |
 |---|---|---|
-| **Problem Alignment** | Tailored for Meera (first-time Indian family organizer); INR budget; wedding/birthday/community; veg menu saving | `shared/engine/config.js`, `shared/engine/budget.js`, `tests/engine/budget.test.js` |
-| **Deterministic Math** | All calculations owned by shared pure engine; LLM never calculates numbers | `shared/engine/index.js`, `shared/engine/whatif.js`, `tests/engine/whatif.test.js` |
+| **Problem Alignment** | Tailored for Meera (first-time Indian family organizer); INR budget; wedding/birthday/community; veg menu saving; auspicious dates | `shared/engine/config.js`, `shared/engine/dates.js`, `tests/engine/budget.test.js` |
+| **Deterministic Math** | All calculations owned by shared pure engine; LLM never calculates numbers; Monte Carlo stress testing; Trade-off studio | `shared/engine/index.js`, `shared/engine/stress.js`, `shared/engine/tradeoff.js`, `tests/engine/stress.test.js` |
 | **GenAI Personalisation** | Gemini 2.5 Flash via REST; structured JSON; responseSchema; prompt injection defense | `server/ai/gemini.js`, `server/ai/prompts.js`, `tests/ai/gemini.test.js` |
-| **Offline Resilience** | Shared engine runs in browser; rule-based fallback pools for ideas and chat | `server/ai/fallback.js`, `frontend/js/api.js`, `tests/server/routes.test.js` |
+| **Offline Resilience** | Shared engine runs in browser; rule-based fallback pools for ideas and chat; PWA manifest | `frontend/manifest.json`, `server/ai/fallback.js`, `frontend/js/api.js`, `tests/server/routes.test.js` |
+| **Spreadsheet & PDF Export** | Downloadable multi-sheet Excel workbooks and branded PDF summaries | `server/routes/export.js`, `tests/server/export.test.js` |
 | **Security & CSP** | Helmet strict CSP; 20 KB body limit; XML `<user_data>` isolation; narration guard | `server/middleware/security.js`, `server/ai/guard.js`, `tests/ai/gemini.test.js` |
 | **Accessibility (AA)** | Semantic HTML5; skip link; 44px touch targets; 4.5:1 contrast; ARIA live; keyboard trap | `frontend/index.html`, `frontend/css/styles.css`, `tests/a11y/frontend.test.js` |
 | **Code Quality** | Zero-build ESM; strict JSDoc typing checked by `tsc --checkJs --noEmit`; ESLint 9 | `eslint.config.js`, `tsconfig.json`, `npm run lint`, `npm run typecheck` |
-| **Testing Coverage** | 102 passing tests; >90% coverage on shared engine and server | `npm test`, `npm run test:coverage` |
+| **Testing Coverage** | 128 passing tests; 96.5% statement/line coverage, 100% function coverage | `npm test`, `npm run test:coverage` |
 
 ---
 
