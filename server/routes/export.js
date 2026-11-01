@@ -10,7 +10,7 @@ import { runStressTest } from '../../shared/engine/stress.js';
 import { forecastRsvp } from '../../shared/engine/rsvp.js';
 import { sanitizeSpreadsheetFormula } from '../../shared/engine/exportModel.js';
 import { validatePlanInputs } from '../util/validate.js';
-import { sendError } from '../util/errors.js';
+import { sendError, errorMessage } from '../util/errors.js';
 import { logger } from '../util/logger.js';
 
 const router = Router();
@@ -134,8 +134,8 @@ router.post('/excel', async (req, res) => {
     res.end();
     logger.info('Excel export served', { name: inputs.name });
   } catch (err) {
-    logger.error('Excel export error', { message: err.message });
-    sendError(res, 400, 'EXPORT_ERROR', err.message);
+    logger.error('Excel export error', { message: errorMessage(err) });
+    sendError(res, 400, 'EXPORT_ERROR', errorMessage(err));
   }
 });
 
@@ -246,8 +246,8 @@ router.post('/pdf', async (req, res) => {
     doc.end();
     logger.info('PDF export served', { name: inputs.name });
   } catch (err) {
-    logger.error('PDF export error', { message: err.message });
-    sendError(res, 400, 'EXPORT_ERROR', err.message);
+    logger.error('PDF export error', { message: errorMessage(err) });
+    sendError(res, 400, 'EXPORT_ERROR', errorMessage(err));
   }
 });
 

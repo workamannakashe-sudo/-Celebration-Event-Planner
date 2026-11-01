@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file tests/a11y/axe.test.js
  * @description Automated WCAG 2.2 AA audit using axe-core.
  * Parses real HTML files and runs the full axe ruleset in jsdom.
@@ -46,7 +46,7 @@ describe("axe WCAG 2.2 AA audit - landing page (frontend/site)", () => {
       const msgs = critical.map(
         (v) => `[${v.id}] ${v.description} (${v.nodes.length} node(s))`
       );
-      expect.fail("Critical axe violations:\n" + msgs.join("\n"));
+      expect.fail(`Critical axe violations:\n${msgs.join('\n')}`);
     }
     expect(critical.length).toBe(0);
   });
@@ -57,7 +57,7 @@ describe("axe WCAG 2.2 AA audit - landing page (frontend/site)", () => {
       const msgs = serious.map(
         (v) => `[${v.id}] ${v.description} (${v.nodes.length} node(s))`
       );
-      expect.fail("Serious axe violations:\n" + msgs.join("\n"));
+      expect.fail(`Serious axe violations:\n${msgs.join('\n')}`);
     }
     expect(serious.length).toBe(0);
   });
@@ -83,7 +83,7 @@ describe("axe WCAG 2.2 AA audit - planner app (frontend/app)", () => {
       const msgs = critical.map(
         (v) => `[${v.id}] ${v.description} (${v.nodes.length} node(s))`
       );
-      expect.fail("Critical axe violations:\n" + msgs.join("\n"));
+      expect.fail(`Critical axe violations:\n${msgs.join('\n')}`);
     }
     expect(critical.length).toBe(0);
   });
@@ -94,7 +94,7 @@ describe("axe WCAG 2.2 AA audit - planner app (frontend/app)", () => {
       const msgs = serious.map(
         (v) => `[${v.id}] ${v.description} (${v.nodes.length} node(s))`
       );
-      expect.fail("Serious axe violations:\n" + msgs.join("\n"));
+      expect.fail(`Serious axe violations:\n${msgs.join('\n')}`);
     }
     expect(serious.length).toBe(0);
   });

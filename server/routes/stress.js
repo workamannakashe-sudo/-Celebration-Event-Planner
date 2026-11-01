@@ -7,7 +7,7 @@ import { Router } from 'express';
 import { validate } from '../middleware/validate.js';
 import { PlanInputsSchema } from '../ai/schemas.js';
 import { runStressTest } from '../../shared/engine/stress.js';
-import { sendError } from '../util/errors.js';
+import { sendError, errorMessage } from '../util/errors.js';
 
 const router = Router();
 
@@ -20,7 +20,7 @@ router.post('/', validate(PlanInputsSchema), (req, res) => {
     const result = runStressTest(req.body, { simulations });
     res.json(result);
   } catch (err) {
-    sendError(res, 500, 'STRESS_ERROR', err.message);
+    sendError(res, 500, 'STRESS_ERROR', errorMessage(err));
   }
 });
 

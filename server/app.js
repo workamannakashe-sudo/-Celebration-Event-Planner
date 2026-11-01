@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url';
 import { join, dirname } from 'path';
 
 import { applySecurityMiddleware } from './middleware/security.js';
-import { sendError } from './util/errors.js';
+import { sendError, errorMessage } from './util/errors.js';
 import { logger } from './util/logger.js';
 
 import healthRouter from './routes/health.js';
@@ -107,7 +107,7 @@ export function createApp() {
   // ── Global error handler ─────────────────────────────────────────────────────
    
   app.use((err, _req, res, _next) => {
-    logger.error('Unhandled error', { message: err.message });
+    logger.error('Unhandled error', { message: errorMessage(err) });
     sendError(res, 500, 'INTERNAL_ERROR', 'An unexpected error occurred');
   });
 

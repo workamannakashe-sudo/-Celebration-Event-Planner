@@ -128,10 +128,12 @@ export async function callGemini(opts) {
       cacheSet(key, parsed);
       return parsed;
     } catch (err) {
-      if (err.name === 'AbortError') {
+      const errName = err instanceof Error ? err.name : '';
+      const errMsg = err instanceof Error ? err.message : '';
+      if (errName === 'AbortError') {
         lastError = new Error('TIMEOUT');
-      } else if (err.message === 'RATE_LIMITED') {
-        lastError = err;
+      } else if (errMsg === 'RATE_LIMITED') {
+        lastError = err instanceof Error ? err : new Error('RATE_LIMITED');
       } else {
         throw err; // Non-retryable
       }

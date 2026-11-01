@@ -11,7 +11,7 @@ import { computePlan } from '../../shared/engine/index.js';
 import { callGemini } from '../ai/gemini.js';
 import { buildIdeasPrompt } from '../ai/prompts.js';
 import { fallbackIdeas } from '../ai/fallback.js';
-import { sendError } from '../util/errors.js';
+import { sendError, errorMessage } from '../util/errors.js';
 import { logger } from '../util/logger.js';
 
 const router = Router();
@@ -37,7 +37,7 @@ router.post('/', aiRateLimit, validate(IdeasRequestSchema), async (req, res) => 
   try {
     plan = computePlan(inputs);
   } catch (err) {
-    if (err.message?.includes('future')) {
+    if (errorMessage(err).includes('future')) {
       return sendError(res, 422, 'DATE_IN_PAST', 'Event date must be in the future');
     }
     return sendError(res, 500, 'ENGINE_ERROR', 'Failed to compute plan');
@@ -60,7 +60,7 @@ router.post('/', aiRateLimit, validate(IdeasRequestSchema), async (req, res) => 
       }
       logger.warn('Gemini ideas response failed Zod validation – using fallback', { errors: validated.error.errors });
     } catch (err) {
-      logger.warn('Gemini ideas call failed – using fallback', { reason: err.message });
+      logger.warn('Gemini ideas call failed – using fallback', { reason: errorMessage(err) });
     }
   }
 

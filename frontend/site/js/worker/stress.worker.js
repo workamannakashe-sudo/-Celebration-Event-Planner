@@ -41,7 +41,7 @@ self.onmessage = function (e) {
   } catch (err) {
     self.postMessage({
       success: false,
-      error: err.message,
+      error: err instanceof Error ? err.message : String(err),
     });
   }
 };

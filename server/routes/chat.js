@@ -14,7 +14,7 @@ import { callGemini } from '../ai/gemini.js';
 import { buildChatParsePrompt, buildNarrationPrompt, sanitiseUserText } from '../ai/prompts.js';
 import { parseScenario, templateNarration } from '../ai/fallback.js';
 import { narrationIsClean } from '../ai/guard.js';
-import { sendError } from '../util/errors.js';
+import { sendError, errorMessage } from '../util/errors.js';
 import { logger } from '../util/logger.js';
 
 const router = Router();
@@ -65,7 +65,7 @@ router.post('/', aiRateLimit, validate(ChatRequestSchema), async (req, res) => {
         source = 'ai';
       }
     } catch (err) {
-      logger.warn('Gemini parse step failed – using regex fallback', { reason: err.message });
+      logger.warn('Gemini parse step failed – using regex fallback', { reason: errorMessage(err) });
     }
   }
 
@@ -110,7 +110,7 @@ router.post('/', aiRateLimit, validate(ChatRequestSchema), async (req, res) => {
         source = 'fallback';
       }
     } catch (err) {
-      logger.warn('Gemini narration step failed – using template', { reason: err.message });
+      logger.warn('Gemini narration step failed – using template', { reason: errorMessage(err) });
       source = 'fallback';
     }
   }
