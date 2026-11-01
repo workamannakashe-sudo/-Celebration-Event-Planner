@@ -59,7 +59,7 @@ export function computePlan(inputs, today = new Date()) {
   const timeline = buildTimeline(type, date, today);
   const vendors = buildVendorChecklist(budgetPlan);
 
-  const eventDate = new Date(date + 'T00:00:00');
+  const eventDate = new Date(`${date  }T00:00:00`);
   const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   const daysToGo = Math.round((eventDate.getTime() - todayMidnight.getTime()) / (1000 * 60 * 60 * 24));
 

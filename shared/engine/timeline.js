@@ -20,7 +20,7 @@ import { MILESTONES, IDEAL_LEAD_WEEKS } from './config.js';
  * @typedef {Object} TimelinePlan
  * @property {TimelineMilestone[]} milestones - Ordered from earliest to event day
  * @property {boolean} compressed - True when available lead time < ideal lead
- * @property {string|undefined} warning - Advisory message when compressed
+ * @property {string} [warning] - Advisory message when compressed
  * @property {number} weeksAvailable - Weeks from today to event date
  * @property {number} idealLeadWeeks
  */

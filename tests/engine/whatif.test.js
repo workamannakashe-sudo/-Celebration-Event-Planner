@@ -11,6 +11,7 @@ function futureDate(weeksAhead) {
   return d.toISOString().split('T')[0];
 }
 
+/** @type {import('../../shared/engine/index.js').PlanInputs} */
 const BASE_INPUTS = {
   type: 'wedding',
   name: 'Meera',

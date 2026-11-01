@@ -58,7 +58,6 @@ export function allocateBudget(type, totalBudget, vibe, vegOnly) {
   if (!baseWeights) throw new Error(`Unknown event type: ${type}`);
 
   const spendable = Math.round(totalBudget * (1 - CONTINGENCY_FRACTION));
-  const contingency = totalBudget - spendable;
 
   // Apply vibe multipliers to raw weights
   const adjustedWeights = {};

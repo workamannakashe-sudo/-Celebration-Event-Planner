@@ -6,7 +6,9 @@
 import { describe, it, expect } from 'vitest';
 import { allocateBudget } from '../../shared/engine/budget.js';
 
+/** @type {import('../../shared/engine/config.js').EventType[]} */
 const TYPES = ['wedding', 'birthday', 'community'];
+/** @type {import('../../shared/engine/config.js').Vibe[]} */
 const VIBES = ['Elegant', 'Fun', 'Traditional', 'Minimal'];
 const BUDGET = 500_000;
 
@@ -51,7 +53,7 @@ describe('Budget allocation – sum invariant', () => {
   });
 
   it('throws on unknown event type', () => {
-    expect(() => allocateBudget('gala', BUDGET, 'Fun', false)).toThrow();
+    expect(() => allocateBudget(/** @type {any} */ ('gala'), BUDGET, 'Fun', false)).toThrow();
   });
 
   it('works with minimum budget 10000', () => {

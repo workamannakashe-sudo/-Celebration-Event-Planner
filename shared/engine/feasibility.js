@@ -17,8 +17,8 @@ import { getCateringCategory } from './budget.js';
  * @property {FeasibilityTier} tier
  * @property {number} perHeadActual - Actual catering per head (INR)
  * @property {number} perHeadMin - Minimum comfortable per head for this type
- * @property {number|undefined} maxGuestsThatFit - Only present when tier === 'Tight'
- * @property {number|undefined} budgetNeeded - Only present when tier === 'Tight'
+ * @property {number} [maxGuestsThatFit] - Only present when tier === 'Tight'
+ * @property {number} [budgetNeeded] - Only present when tier === 'Tight'
  */
 
 /**
