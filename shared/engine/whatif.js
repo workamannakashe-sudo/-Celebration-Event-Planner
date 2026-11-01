@@ -6,16 +6,7 @@
 
 import { computePlan } from './index.js';
 
-/**
- * @typedef {Object} PlanInputs
- * @property {'wedding'|'birthday'|'community'} type
- * @property {string} name
- * @property {number} guests
- * @property {number} budget
- * @property {string} date
- * @property {'Elegant'|'Fun'|'Traditional'|'Minimal'} vibe
- * @property {boolean} vegOnly
- */
+/** @typedef {import('./index.js').PlanInputs} PlanInputs */
 
 /**
  * @typedef {Object} WhatIfScenario

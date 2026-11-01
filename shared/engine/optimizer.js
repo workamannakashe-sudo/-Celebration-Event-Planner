@@ -137,7 +137,7 @@ export function findOptimalSavingsLevers(type, targetSaving, userPriorityWeights
       regretWeight: l.regretWeight,
       formattedSaving: `${formatINR(l.minSaving)} – ${formatINR(l.maxSaving)}`,
     })),
-    totalRegretScore: parseFloat(bestRegret === Infinity ? 0 : bestRegret.toFixed(2)),
+    totalRegretScore: bestRegret === Infinity ? 0 : parseFloat(bestRegret.toFixed(2)),
     shortfall: isAchievable ? 0 : (targetSaving - totalAchievedSaving),
     recommendation: isAchievable
       ? `By applying ${chosenLevers.length} selected lever${chosenLevers.length === 1 ? '' : 's'}, you save at least ${formatINR(totalAchievedSaving)} with minimum disruption.`

@@ -22,7 +22,7 @@
 /**
  * Industry-average RSVP attendance rates (fraction) and caterer buffer % by event type.
  * Sources: Indian hospitality consultancy benchmarks.
- * @type {Record<EventType, {rate: number, low: number, high: number, buffer: number}>}
+ * @type {Partial<Record<EventType, {rate: number, low: number, high: number, buffer: number}>>}
  */
 const RSVP_NORMS = {
   wedding:   { rate: 0.78, low: 0.68, high: 0.88, buffer: 10 },

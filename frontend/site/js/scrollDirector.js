@@ -43,10 +43,11 @@ export class ScrollDirector {
       const rect = el.getBoundingClientRect();
       const top = rect.top + window.scrollY;
       const height = rect.height;
+      const htmlEl = /** @type {HTMLElement} */ (el);
       return {
         id: el.id,
         index: idx,
-        num: el.dataset.section || String(idx).padStart(3, '0'),
+        num: htmlEl.dataset?.section || String(idx).padStart(3, '0'),
         top,
         bottom: top + height,
         height,

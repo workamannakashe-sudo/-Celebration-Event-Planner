@@ -3,6 +3,28 @@
  * @description Utsav Planning Engine – unified public API.
  * Pure ECMAScript Modules (ESM) imported by both server and browser.
  * Injectable clock and seeded pseudo-random engines.
+ *
+ * @typedef {Object} PlanInputs
+ * @property {'wedding'|'anniversary'|'birthday'|'mundan'|'housewarming'|'general'|'community'} type
+ * @property {string} [name]
+ * @property {number} budget - Total budget in INR
+ * @property {number} guests - Expected guest count
+ * @property {string} date - Event date (YYYY-MM-DD)
+ * @property {string} [vibe]
+ * @property {boolean} [vegOnly]
+ * @property {'metro'|'tier2'|'town'|'city'} [citySize]
+ *
+ * @typedef {Object} UtsavPlan
+ * @property {PlanInputs} inputs
+ * @property {any} budget
+ * @property {any} feasibility
+ * @property {any} timeline
+ * @property {any} vendors
+ * @property {any} [capacity]
+ * @property {any} [criticalPath]
+ * @property {any} [scenarios]
+ * @property {number} daysToGo
+ * @property {number} perGuest
  */
 
 import { allocateBudget } from './budget.js';

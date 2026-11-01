@@ -41,6 +41,7 @@ describe('ScrollDirector', () => {
   });
 
   it('subscribes listeners and receives updates', () => {
+    /** @type {any} */
     let receivedState = null;
     const unsub = director.subscribe((s) => {
       receivedState = s;

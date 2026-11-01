@@ -183,7 +183,7 @@ export function analyzeDateShift(type, currentDate, newDate, today = new Date())
     if (!prev) continue;
 
     if (next.isOverdue && !prev.isOverdue) {
-      newlyOverdue.push({ id: next.id, task: next.task, dueDate: next.dueDate, owner: next.owner });
+      newlyOverdue.push({ id: next.id, task: next.task, dueDate: next.dueDate, owner: next.owner, isCritical: Boolean(next.isCritical) });
     }
     if (next.isCritical && !prev.isCritical) {
       newlyCritical.push({ id: next.id, task: next.task, slackLostDays: prev.slackDays - next.slackDays });

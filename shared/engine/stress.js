@@ -71,7 +71,7 @@ export function runStressTest(inputs, config = {}) {
 
   const rand = prng(seed);
 
-  const basePlan = allocateBudget(inputs.type, inputs.budget, inputs.vibe, inputs.vegOnly);
+  const basePlan = allocateBudget(inputs.type, inputs.budget, /** @type {import('./config.js').Vibe} */ (inputs.vibe || 'Traditional'), inputs.vegOnly);
   const totalBudget = inputs.budget;
   const baseCategories = basePlan.categories;
 

@@ -42,7 +42,7 @@ const FLOOR_FRACTION = 0.3;
  * @returns {TradeoffResult}
  */
 export function computeTradeoff(inputs, scenario) {
-  const plan = allocateBudget(inputs.type, inputs.budget, inputs.vibe, inputs.vegOnly);
+  const plan = allocateBudget(inputs.type, inputs.budget, /** @type {import('./config.js').Vibe} */ (inputs.vibe || 'Traditional'), inputs.vegOnly);
   const { categories, contingency } = plan;
 
   const boostAmt = Math.max(0, Math.min(scenario.boostAmount, plan.totalBudget * 0.3));

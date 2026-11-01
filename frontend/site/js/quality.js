@@ -30,8 +30,10 @@ export function detectQualityTier() {
   }
 
   // If user requests reduced motion or data, enforce low tier (static fallback)
-  const reducedMotion = typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-reduced-motion: reduce)').matches : false;
-  const reducedData = typeof navigator !== 'undefined' && navigator.connection && navigator.connection.saveData;
+  const reducedMotion = typeof window !== 'undefined' && typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-reduced-motion: reduce)').matches : false;
+  // @ts-ignore
+  const conn = typeof navigator !== 'undefined' ? /** @type {any} */ (navigator).connection : null;
+  const reducedData = Boolean(conn && conn.saveData);
   if (reducedMotion || reducedData) {
     return 'low';
   }

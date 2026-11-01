@@ -64,25 +64,26 @@ export function generateSeatingPlan(guests, options = {}) {
   }
 
   const tables = [];
+  /** @type {{ tableNumber: number, label: string, capacity: number, guests: any[], isVegOnly: boolean, occupancy?: string } | null} */
   let currentTable = null;
   let tableCounter = 1;
 
   function startNewTable(label = 'Table') {
-    currentTable = {
+    const tbl = {
       tableNumber: tableCounter++,
       label: `${label} ${tableCounter - 1}`,
       capacity: tableCapacity,
-      guests: [],
+      guests: /** @type {any[]} */ ([]),
       isVegOnly: false,
     };
-    tables.push(currentTable);
-    return currentTable;
+    tables.push(tbl);
+    return tbl;
   }
 
   // Process elders first (place close to stage/front)
   for (const g of groups.elders) {
     if (!currentTable || currentTable.guests.length >= tableCapacity) {
-      startNewTable('VIP Elders');
+      currentTable = startNewTable('VIP Elders');
     }
     currentTable.guests.push(g);
   }
@@ -90,7 +91,7 @@ export function generateSeatingPlan(guests, options = {}) {
   // Process family
   for (const g of groups.family) {
     if (!currentTable || currentTable.guests.length >= tableCapacity) {
-      startNewTable('Family');
+      currentTable = startNewTable('Family');
     }
     currentTable.guests.push(g);
   }
@@ -98,7 +99,7 @@ export function generateSeatingPlan(guests, options = {}) {
   // Process friends
   for (const g of groups.friends) {
     if (!currentTable || currentTable.guests.length >= tableCapacity) {
-      startNewTable('Friends');
+      currentTable = startNewTable('Friends');
     }
     currentTable.guests.push(g);
   }
@@ -106,7 +107,7 @@ export function generateSeatingPlan(guests, options = {}) {
   // Process colleagues
   for (const g of groups.colleagues) {
     if (!currentTable || currentTable.guests.length >= tableCapacity) {
-      startNewTable('Colleagues');
+      currentTable = startNewTable('Colleagues');
     }
     currentTable.guests.push(g);
   }
@@ -114,7 +115,7 @@ export function generateSeatingPlan(guests, options = {}) {
   // Process others
   for (const g of groups.other) {
     if (!currentTable || currentTable.guests.length >= tableCapacity) {
-      startNewTable('Guests');
+      currentTable = startNewTable('Guests');
     }
     currentTable.guests.push(g);
   }

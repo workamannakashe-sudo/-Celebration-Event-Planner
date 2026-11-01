@@ -12,6 +12,7 @@ import { buildTimeline } from '../../../shared/engine/timeline.js';
 import { forecastRsvp } from '../../../shared/engine/rsvp.js';
 import { compareQuotes } from '../../../shared/engine/quotes.js';
 
+/** @type {import('../../../shared/engine/index.js').PlanInputs} */
 export const DEMO_PLAN_INPUTS = {
   type: 'wedding',
   name: 'Meera & Rohan Wedding',
@@ -27,7 +28,7 @@ export const DEMO_PLAN_INPUTS = {
  * @param {typeof DEMO_PLAN_INPUTS} inputs
  */
 export function getDonutSegments(inputs = DEMO_PLAN_INPUTS) {
-  const allocation = allocateBudget(inputs.type, inputs.budget, inputs.vibe, inputs.vegOnly);
+  const allocation = allocateBudget(inputs.type, inputs.budget, /** @type {import('../../../shared/engine/config.js').Vibe} */ (inputs.vibe || 'Traditional'), inputs.vegOnly);
   const items = [
     ...allocation.categories,
     { name: 'Contingency Buffer', amount: allocation.contingency, pct: allocation.contingencyPct },
@@ -88,8 +89,7 @@ export function getStressDistribution(inputs = DEMO_PLAN_INPUTS, simulations = 2
 
 /**
  * Compute timeline milestones for Scene 4 (Timeline Ribbon).
- * @param {string} eventDate
- * @param {number} availableWeeks
+ * @param {string} [eventDate]
  */
 export function getTimelineNodes(eventDate = DEMO_PLAN_INPUTS.date) {
   const plan = buildTimeline('wedding', eventDate);

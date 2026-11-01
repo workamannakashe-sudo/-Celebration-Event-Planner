@@ -9,7 +9,7 @@ import { generateScenarios } from './scenarios.js';
 
 /**
  * Sanitize user text to neutralize spreadsheet formula injection (CSV/XLSX injection).
- * If a cell string starts with =, +, -, @, tab, or carriage return, prefix it with a single quote.
+ * If a cell string starts with =, +, -, at-sign (@), tab, or carriage return, prefix it with a single quote.
  *
  * @param {string|any} value
  * @returns {string|any}

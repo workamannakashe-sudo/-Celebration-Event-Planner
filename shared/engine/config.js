@@ -5,13 +5,15 @@
  * milestones live here so they can be imported by both server and browser.
  */
 
-/** @typedef {'wedding'|'birthday'|'community'} EventType */
-/** @typedef {'Elegant'|'Fun'|'Traditional'|'Minimal'} Vibe */
+/** @typedef {'wedding'|'birthday'|'community'} BaseEventType */
+/** @typedef {'wedding'|'birthday'|'community'|'anniversary'|'mundan'|'housewarming'|'general'} EventType */
+/** @typedef {'Elegant'|'Fun'|'Traditional'|'Minimal'} BaseVibe */
+/** @typedef {'Elegant'|'Fun'|'Traditional'|'Minimal'|'Contemporary'|'Royal'|'Minimalist'} Vibe */
 
 /**
  * Base budget weight vectors per event type.
  * Keys are category display names; values are raw weights (normalised later).
- * @type {Record<EventType, Record<string,number>>}
+ * @type {Record<BaseEventType, Record<string,number>>}
  */
 export const BASE_WEIGHTS = {
   wedding: {
@@ -47,7 +49,7 @@ export const BASE_WEIGHTS = {
 /**
  * Vibe multipliers: pattern => scale factor.
  * The pattern is matched case-insensitively against the category name.
- * @type {Record<Vibe, Array<{pattern:RegExp, factor:number}>>}
+ * @type {Record<BaseVibe, Array<{pattern:RegExp, factor:number}>>}
  */
 export const VIBE_MULTIPLIERS = {
   Elegant: [
@@ -76,7 +78,7 @@ export const VEG_ONLY_CATERING_REDUCTION = 0.08;
 
 /**
  * Minimum per-head catering spend (INR) by event type.
- * @type {Record<EventType, number>}
+ * @type {Record<BaseEventType, number>}
  */
 export const CATERING_MIN_PER_HEAD = {
   wedding: 900,
@@ -89,7 +91,7 @@ export const GENEROUS_MULTIPLIER = 1.8;
 
 /**
  * Ideal planning lead time in weeks per event type.
- * @type {Record<EventType, number>}
+ * @type {Record<BaseEventType, number>}
  */
 export const IDEAL_LEAD_WEEKS = {
   wedding: 26,
@@ -100,7 +102,7 @@ export const IDEAL_LEAD_WEEKS = {
 /**
  * Timeline milestones per event type.
  * Each milestone has weeks-before-event and a task description.
- * @type {Record<EventType, Array<{weeksBefore:number, task:string}>>}
+ * @type {Record<BaseEventType, Array<{weeksBefore:number, task:string}>>}
  */
 export const MILESTONES = {
   wedding: [
