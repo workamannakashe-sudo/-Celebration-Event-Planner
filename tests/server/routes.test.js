@@ -3,7 +3,7 @@
  * @description Server route tests using supertest.
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import request from 'supertest';
 import { createApp } from '../../server/app.js';
 
@@ -159,4 +159,57 @@ describe('POST /api/chat', () => {
     });
     expect(res.status).toBe(400);
   });
+
+  it('falls back to template narration when Gemini returns unverified numbers', async () => {
+    const origKey = process.env.GEMINI_API_KEY;
+    process.env.GEMINI_API_KEY = 'mock-key';
+
+    const origFetch = global.fetch;
+    // Step 1: Parse response
+    // Step 2: Narrate response with invented number 9999999
+    global.fetch = vi.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          candidates: [{ content: { parts: [{ text: JSON.stringify({ intent: 'whatif', scenario: { budgetPct: -10 } }) }] } }],
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          candidates: [{ content: { parts: [{ text: JSON.stringify({ narration: 'Spend exactly 9999999 on gold!' }) }] } }],
+        }),
+      });
+
+    const res = await request(app).post('/api/chat').send({
+      inputs: VALID_INPUTS,
+      message: 'cut budget 10%',
+      lang: 'en',
+    });
+
+    expect(res.status).toBe(200);
+    // Should fallback because 9999999 is hallucinated
+    expect(res.body.source).toBe('fallback');
+    expect(res.body.reply).not.toContain('9999999');
+
+    process.env.GEMINI_API_KEY = origKey;
+    global.fetch = origFetch;
+  });
 });
+
+describe('General error handling & 404 fallback', () => {
+  it('returns 404 for unknown routes', async () => {
+    const res = await request(app).get('/api/unknown-endpoint');
+    expect(res.status).toBe(404);
+    expect(res.body.error.code).toBe('NOT_FOUND');
+  });
+
+  it('rejects past event date on /api/plan with 400', async () => {
+    const res = await request(app)
+      .post('/api/plan')
+      .send({ ...VALID_INPUTS, date: '2020-01-01' });
+    expect(res.status).toBe(400);
+    expect(res.body.error.code).toBe('VALIDATION_ERROR');
+  });
+});
+

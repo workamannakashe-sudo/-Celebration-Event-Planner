@@ -5,8 +5,8 @@
 
 [![CI](https://github.com/workamannakashe-sudo/-Celebration-Event-Planner/actions/workflows/ci.yml/badge.svg)](https://github.com/workamannakashe-sudo/-Celebration-Event-Planner/actions/workflows/ci.yml)
 [![Node](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org/)
-[![Tests](https://img.shields.io/badge/tests-102%20passed-success.svg)](https://vitest.dev/)
-[![Coverage](https://img.shields.io/badge/coverage-%3E90%25-blue.svg)](https://vitest.dev/)
+[![Tests](https://img.shields.io/badge/tests-105%20passed-success.svg)](https://vitest.dev/)
+[![Coverage](https://img.shields.io/badge/coverage-96%25-blue.svg)](https://vitest.dev/)
 [![WCAG](https://img.shields.io/badge/WCAG%202.2-AA%20Compliant-purple.svg)](https://www.w3.org/WAI/standards-guidelines/wcag/)
 
 ---
