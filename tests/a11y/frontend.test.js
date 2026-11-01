@@ -8,9 +8,9 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { escapeIcsText, generateIcs } from '../../frontend/js/ics.js';
-import { t, setLanguage, getLanguage } from '../../frontend/js/i18n.js';
-import { setText, formatINR } from '../../frontend/js/render.js';
+import { escapeIcsText, generateIcs } from '../../frontend/app/js/ics.js';
+import { t, setLanguage, getLanguage } from '../../frontend/app/js/i18n.js';
+import { setText, formatINR } from '../../frontend/app/js/render.js';
 import { computePlan } from '../../shared/engine/index.js';
 
 describe('Frontend helper functions', () => {
@@ -110,7 +110,7 @@ describe('Accessibility (WCAG 2.2 AA) smoke checks on index.html', () => {
   let htmlDoc;
 
   beforeEach(() => {
-    const htmlPath = resolve(process.cwd(), 'frontend/index.html');
+    const htmlPath = resolve(process.cwd(), 'frontend/app/index.html');
     const htmlContent = readFileSync(htmlPath, 'utf-8');
     document.documentElement.innerHTML = htmlContent;
     htmlDoc = document;

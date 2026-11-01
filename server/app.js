@@ -43,6 +43,15 @@ export function createApp() {
   });
 
   // ── Static files ─────────────────────────────────────────────────────────────
+  // Serve Three.js from node_modules on a whitelisted vendor route
+  app.use(
+    '/vendor/three',
+    express.static(join(ROOT, 'node_modules', 'three'), {
+      maxAge: '1h',
+      etag: true,
+    })
+  );
+
   // Serve /shared/engine so the browser can import the engine directly
   app.use(
     '/shared',
@@ -52,9 +61,19 @@ export function createApp() {
     })
   );
 
-  // Serve frontend
+  // Serve planner app at /app
   app.use(
-    express.static(join(ROOT, 'frontend'), {
+    '/app',
+    express.static(join(ROOT, 'frontend', 'app'), {
+      maxAge: '1h',
+      etag: true,
+      index: 'index.html',
+    })
+  );
+
+  // Serve landing page at root /
+  app.use(
+    express.static(join(ROOT, 'frontend', 'site'), {
       maxAge: '1h',
       etag: true,
       index: 'index.html',
@@ -74,9 +93,15 @@ export function createApp() {
     sendError(res, 404, 'NOT_FOUND', 'API endpoint not found');
   });
 
-  // ── SPA fallback for frontend routes ────────────────────────────────────────
+  // ── SPA fallbacks ────────────────────────────────────────────────────────────
+  // Route /app and /app/* to the planner app
+  app.get(/^\/app(\/.*)?$/, (_req, res) => {
+    res.sendFile(join(ROOT, 'frontend', 'app', 'index.html'));
+  });
+
+  // Route everything else to the landing page
   app.get('*', (_req, res) => {
-    res.sendFile(join(ROOT, 'frontend', 'index.html'));
+    res.sendFile(join(ROOT, 'frontend', 'site', 'index.html'));
   });
 
   // ── Global error handler ─────────────────────────────────────────────────────

@@ -21,6 +21,7 @@ export function applySecurityMiddleware(app) {
           fontSrc: ["'self'", 'https://fonts.gstatic.com'],
           imgSrc: ["'self'", 'data:'],
           connectSrc: ["'self'"],
+          workerSrc: ["'self'"],
           frameSrc: ["'none'"],
           objectSrc: ["'none'"],
           baseUri: ["'self'"],
