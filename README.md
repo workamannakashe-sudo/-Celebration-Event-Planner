@@ -5,8 +5,8 @@
 
 [![CI](https://github.com/workamannakashe-sudo/-Celebration-Event-Planner/actions/workflows/ci.yml/badge.svg)](https://github.com/workamannakashe-sudo/-Celebration-Event-Planner/actions/workflows/ci.yml)
 [![Node](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org/)
-[![Tests](https://img.shields.io/badge/tests-128%20passed-success.svg)](https://vitest.dev/)
-[![Coverage](https://img.shields.io/badge/coverage-96.5%25-blue.svg)](https://vitest.dev/)
+[![Tests](https://img.shields.io/badge/tests-151%20passed-success.svg)](https://vitest.dev/)
+[![Coverage](https://img.shields.io/badge/coverage-97%25-blue.svg)](https://vitest.dev/)
 [![WCAG](https://img.shields.io/badge/WCAG%202.2-AA%20Compliant-purple.svg)](https://www.w3.org/WAI/standards-guidelines/wcag/)
 
 ---
@@ -269,7 +269,7 @@ Utsav is designed to work completely out-of-the-box **without any API key**:
 
 ## 10. Testing & Verification
 
-The test suite contains **128 unit and integration tests** across 13 test files covering 96.5% of statements and 100% of functions:
+The test suite contains **151 unit and integration tests** across 14 test files covering 97% of statements and 100% of functions:
 - **Engine Unit Tests (`tests/engine/`)**:
   - `budget.test.js` (29 tests): Invariant tests across all 3 event types × 4 vibes × veg on/off permutations; category allocations sum exactly to total budget.
   - `feasibility.test.js` (6 tests): Threshold detection (`Tight`, `Comfortable`, `Generous`), `maxGuestsThatFit`, and deficit math.
@@ -290,10 +290,10 @@ The test suite contains **128 unit and integration tests** across 13 test files 
 
 ### Running Quality Gates
 ```bash
-# Run all 128 tests
+# Run all 151 tests
 npm test
 
-# Run tests with full v8 coverage report (>96.5% coverage)
+# Run tests with full v8 coverage report (>97% coverage)
 npm run test:coverage
 
 # Run ESLint (0 errors, 0 warnings)
@@ -335,7 +335,7 @@ npm run typecheck
 | **Security & CSP** | Helmet strict CSP; 20 KB body limit; XML `<user_data>` isolation; narration guard | `server/middleware/security.js`, `server/ai/guard.js`, `tests/ai/gemini.test.js` |
 | **Accessibility (AA)** | Semantic HTML5; skip link; 44px touch targets; 4.5:1 contrast; ARIA live; keyboard trap | `frontend/index.html`, `frontend/css/styles.css`, `tests/a11y/frontend.test.js` |
 | **Code Quality** | Zero-build ESM; strict JSDoc typing checked by `tsc --checkJs --noEmit`; ESLint 9 | `eslint.config.js`, `tsconfig.json`, `npm run lint`, `npm run typecheck` |
-| **Testing Coverage** | 128 passing tests; 96.5% statement/line coverage, 100% function coverage | `npm test`, `npm run test:coverage` |
+| **Testing Coverage** | 151 passing tests; 97% statement/line coverage, 100% function coverage | `npm test`, `npm run test:coverage` |
 
 ---
 
